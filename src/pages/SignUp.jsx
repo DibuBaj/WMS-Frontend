@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./signup.css";
+import "../styles/signup.css";
 
-const SignupForm = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
@@ -92,4 +92,4 @@ const SignupForm = () => {
   );
 };
 
-export default SignupForm;
+export default SignUp;
