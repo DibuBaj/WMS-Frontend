@@ -5,8 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Userdashboard from "./pages/Userdashboard";
-import Schedule from "../components/Userdashboard/Navbar/Schedule";
-import Settings from "../components/Userdashboard/Navbar/Settings";
+
 
 
 
