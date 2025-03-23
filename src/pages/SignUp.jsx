@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/signup.css";
+import Logo from "../assets/Logo.svg";
+
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -29,10 +31,16 @@ const SignUp = () => {
 
   return (
     <div className="container">
+      <div className="background-container">
+        <div className="logo-wrapper">
+          <img src={Logo} alt="GreenBin Logo" className="logo-img" />
+        </div>
       <div className="form-box">
         <h2 className="title">Create your account</h2>
         <p className="subtitle">Enter your details to get started</p>
         <form onSubmit={handleSubmit} className="form">
+
+        <label className="input-label-name">Full Name</label>
           <input
             type="text"
             name="fullName"
@@ -42,6 +50,8 @@ const SignUp = () => {
             className="input"
             required
           />
+
+        <label className="input-label-email">Email Address</label>
           <input
             type="email"
             name="email"
@@ -51,6 +61,7 @@ const SignUp = () => {
             className="input"
             required
           />
+          <label className="input-label-password">Password</label>
           <input
             type="password"
             name="password"
@@ -60,6 +71,8 @@ const SignUp = () => {
             className="input"
             required
           />
+
+        <label className="input-label-re-password">Confirm Password</label>
           <input
             type="password"
             name="confirmPassword"
@@ -88,6 +101,7 @@ const SignUp = () => {
           Already have an account? <a href="/signin" className="signin-link">Sign in</a>
         </p>
       </div>
+    </div>
     </div>
   );
 };

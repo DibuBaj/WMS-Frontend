@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/signin.css";
+import Logo from "../assets/Logo.svg";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -26,8 +27,12 @@ const SignIn = () => {
 
   return (
     <div className="container">
+      <div className="background-container">
+      <div className="logo-wrapper">
+          <img src={Logo} alt="GreenBin Logo" className="logo-img" />
+        </div>
       <div className="form-box">
-        <h2 className="title">Welcome back</h2>
+        <h2 className="title">Welcome to GreenBin</h2>
         <p className="subtitle">Sign in to your account</p>
         <form onSubmit={handleSubmit} className="form">
           <input
@@ -69,7 +74,8 @@ const SignIn = () => {
           Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
         </p>
       </div>
-    </div>
+      </div>
+   </div>
   );
 };
 
