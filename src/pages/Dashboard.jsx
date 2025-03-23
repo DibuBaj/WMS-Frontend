@@ -52,6 +52,7 @@ const Dashboard = () => {
         </Card>
       </div>
     </div>
+
     </div>
   );
 };

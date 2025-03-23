@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './signup.css';
-import './signin.css';
+
 
 import App from './App.jsx';
 

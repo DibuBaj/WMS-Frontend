@@ -1,17 +1,18 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Dashboard from "./Dashboard";
-import SignupForm from "./signup";
-import SigninForm from "./signin";
+import Dashboard from "./pages/Dashboard";
+import SignUp from "./pages/signup";
+import SignIn from "./pages/signin";
+
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/signin" element={<SigninForm />} />
+        <Route path="/signup" element={<SignUp/>} />
+        <Route path="/signin" element={<SignIn/>} />
       </Routes>
     </Router>
   );
