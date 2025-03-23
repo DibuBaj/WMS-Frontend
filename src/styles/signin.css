@@ -80,8 +80,9 @@
   }
   
   .forgot-password {
-    color: #2563eb;
+    color: black;
     text-decoration: none;
+    font-weight: bold;
   }
   
   .forgot-password:hover {
@@ -105,11 +106,13 @@
   .signup-text {
     margin-top: 10px;
     font-size: 14px;
+   
   }
   
   .signup-link {
-    color: #2563eb;
+    color: black;
     text-decoration: none;
+    font-weight: bold ;
   }
   
   .signup-link:hover {
