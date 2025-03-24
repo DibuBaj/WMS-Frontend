@@ -1,29 +1,48 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "./components/Userdashboard/Navbar/Sidebar.css";
+import "./Sidebar.css";
+import Dashboard from "../../../assets/Dashboard.svg";
+import Schedule from "../../../assets/Schedule.svg";
+import Settings from "../../../assets/Settings.svg";
+import Recycle from "../../../assets/Recycle.svg";
+import Adminlogo from "../../../assets/Adminlogo.svg"; // Profile image
 
-const SidebarMenu = () => {
+const Sidebar = () => {
   return (
-    <div className="sidebar">
-      <ul>
-        <li>
-          <NavLink to="/" exact activeClassName="active">
-            <span>Dashboard</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/schedule" activeClassName="active">
-            <span>Schedule</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/settings" activeClassName="active">
-           <span>Settings</span>
-          </NavLink>
-        </li>
-      </ul>
+    <div>
+      {/* Top Navbar */}
+      <div className="top-navbar">
+      <img src={Recycle} alt="GreenBin Logo" className="sidebar-logo" />
+        <span className="GreenBinText">GreenBin</span>
+        <img src={Adminlogo} alt="Profile" className="profile-icon" />
+      </div>
+
+      {/* Sidebar */}
+      <div className="sidebar">
+        <ul>
+          <li>
+            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+              <img src={Dashboard} alt="Dashboard" className="icon" />
+              <span className="text">Dashboard</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/schedule" className={({ isActive }) => (isActive ? "active" : "")}>
+              <img src={Schedule} alt="Schedule" className="icon" />
+              <span className="text">Schedule</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/settings" className={({ isActive }) => (isActive ? "active" : "")}>
+              <img src={Settings} alt="Settings" className="icon" />
+              <span className="text">Settings</span>
+            </NavLink>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
 
-export default SidebarMenu;
+export default Sidebar;
+
