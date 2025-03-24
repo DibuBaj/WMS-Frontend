@@ -9,6 +9,7 @@ const Dashboard = () => {
       <Sidebar/>
       <Pickup/>
       
+      
     </>
   );
 };
