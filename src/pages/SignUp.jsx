@@ -33,7 +33,7 @@ const SignUp = () => {
     <div className="container">
       <div className="background-container">
         <div className="logo-wrapper">
-          <img src={Logo} alt="GreenBin Logo" className="logo-img" />
+          <img src={Logo} alt="GreenBin Logo" className="logo-imgg" />
         </div>
       <div className="form-box">
         <h2 className="title">Create your account</h2>
