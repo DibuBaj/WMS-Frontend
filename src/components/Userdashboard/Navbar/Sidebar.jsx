@@ -21,7 +21,7 @@ const Sidebar = () => {
       <div className="sidebar">
         <ul>
           <li>
-            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink to="/userdashboard" className={({ isActive }) => (isActive ? "active" : "")}>
               <img src={Dashboard} alt="Dashboard" className="icon" />
               <span className="text">Dashboard</span>
             </NavLink>
