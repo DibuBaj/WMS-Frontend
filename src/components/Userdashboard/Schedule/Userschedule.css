@@ -1,0 +1,89 @@
+/* Container Styling */
+.container {
+    padding: 20px;
+    max-width: 1500px;
+    margin: auto;
+    background: rgb(250, 250, 250);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+   
+  }
+  
+  /* Title */
+  .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Search and Filter Controls */
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .search-box, .filter-dropdown {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Table Styling */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .data-table th, .data-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .data-table th {
+    background: #f5f5f5;
+  }
+  
+  /* Type Badge */
+  .type-badge {
+    padding: 5px 10px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  /* Status Styling */
+  .status-pending {
+    color: orange;
+  }
+  
+  .status-completed {
+    color: green;
+  }
+  
+  /* Pagination */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .pagination button {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .pagination button.active {
+    background: black;
+    color: white;
+  }
+  
+  .pagination button:disabled {
+    background: #eee;
+    cursor: not-allowed;
+  }
+  

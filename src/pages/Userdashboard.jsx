@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "../components/Userdashboard/Navbar/Sidebar.jsx";
-import Pickup from "../components/Userdashboard/Dashboard/pickup.jsx";
+import Pickup from "../components/Userdashboard/Dashboard/Pickup.jsx";
+import Recentpickup from "../components/Userdashboard/Dashboard/Recentpickup.jsx";
 
 
 const Userdashboard =()=>{
@@ -8,6 +9,7 @@ const Userdashboard =()=>{
     <>
     <Sidebar/>
     <Pickup/>
+    <Recentpickup/>
     </>
 
   

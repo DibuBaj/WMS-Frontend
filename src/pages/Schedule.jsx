@@ -1,7 +1,14 @@
 import React from "react";
+import Sidebar from "../components/Userdashboard/Navbar/Sidebar";
+import Userschedule from "../components/Userdashboard/Schedule/Userschedule.jsx";
 
 const Schedule = () => {
-  return <h2>Schedule Page</h2>;
+  return(
+  <>
+    <Sidebar/>
+   <Userschedule/>
+  </> 
+  )
 };
 
 export default Schedule;

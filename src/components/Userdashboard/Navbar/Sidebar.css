@@ -84,5 +84,58 @@
   color: black;
   font-weight: bold;
 }
+/* Profile Container */
+.profile-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer; /* Now it behaves like a button */
+}
+
+/* Profile Image */
+.profile-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  right: 50px;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 40px; /* Appears right below profile icon */
+  background: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 130px;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  z-index: 1100;
+}
+
+/* Dropdown Items */
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+/* Dropdown Icons */
+.dropdown-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
 
   
