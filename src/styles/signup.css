@@ -19,35 +19,43 @@
   font-size: small;
   position: relative;
   bottom: -5px;
+  color: #395849;
+  font-weight: bold;
 }
 .input-label-email{
   padding-right: 260px;
   font-size: small;
   position: relative;
   bottom: -5px;
+  color: #395849;
+  font-weight: bold;
 }
 .input-label-password{
   padding-right: 287px;
   font-size: small;
   position: relative;
   bottom: -5px;
+  color: #395849;
+  font-weight: bold;
 }
 .input-label-re-password{
   padding-right: 240px;
   font-size: small;
   position: relative;
   bottom: -5px;
+  color: #395849;
+  font-weight: bold;
 }
 .title {
   font-size: 20px;
   font-weight: bold;
-  color: white;
+  color: #395849;
 }
 
 .subtitle {
   font-size: 14px;
   margin-bottom: 16px;
-  color: white;
+  color: #43515A;
   
 }
 

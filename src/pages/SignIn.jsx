@@ -27,26 +27,29 @@ const SignIn = () => {
 
   return (
     <div className="container">
-      <div className="background-container">
       <div className="logo-wrapper">
-          <img src={Logo} alt="GreenBin Logo" className="logo-img" />
-        </div>
+        <img src={Logo} alt="GreenBin Logo" className="logo-img" />
+      </div>
       <div className="form-box">
         <h2 className="title">Welcome to GreenBin</h2>
         <p className="subtitle">Sign in to your account</p>
         <form onSubmit={handleSubmit} className="form">
+          <label htmlFor="email" className="label">Email</label>
           <input
             type="email"
             name="email"
+            id="email"
             placeholder="Enter your email"
             value={formData.email}
             onChange={handleChange}
             className="input"
             required
           />
+          <label htmlFor="password" className="label">Password</label>
           <input
             type="password"
             name="password"
+            id="password"
             placeholder="Enter your password"
             value={formData.password}
             onChange={handleChange}
@@ -62,7 +65,7 @@ const SignIn = () => {
                 onChange={handleChange}
                 className="checkbox"
               />
-              <label>Remember me</label>
+              <label htmlFor="rememberMe">Remember me</label>
             </div>
             <a href="#" className="forgot-password">Forgot password?</a>
           </div>
@@ -74,8 +77,7 @@ const SignIn = () => {
           Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
         </p>
       </div>
-      </div>
-   </div>
+    </div>
   );
 };
 
