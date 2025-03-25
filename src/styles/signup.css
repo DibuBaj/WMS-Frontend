@@ -4,7 +4,7 @@
   justify-content: center;
   min-height: 100vh;
   background-color: #f3f4f6;
-}
+  }
 
 .form-box {
   background: white;
@@ -14,6 +14,7 @@
   width: 350px;
   text-align: center;
 }
+
 .input-label-name{
   padding-right: 280px;
   font-size: small;
@@ -108,4 +109,12 @@
 
 .signin-link:hover {
   text-decoration: underline;
+}
+.logo-img{
+  width: 80px;
+  padding: 40px;
+  border-radius: 50%;
+  position: absolute;
+  top: -90px;
+  left: 115px;
 }
