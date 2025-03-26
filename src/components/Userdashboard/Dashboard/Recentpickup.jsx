@@ -10,7 +10,7 @@ const RecentPickups = [
 
 const Recentpickup = () => {
   return (
-    <>
+    <div className="recent-pickups-wrapper">
     <h2 className="Recenttext">Recent Pickups</h2>
     <div className="recent-pickups">
      
@@ -39,7 +39,7 @@ const Recentpickup = () => {
         </tbody>
       </table>
     </div>
-    </>
+    </div>
   );
 };
 
