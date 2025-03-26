@@ -1,6 +1,6 @@
 import React from "react";
 import "./Recentpickup.css";
-import Pickup from "./Pickup";
+
 
 const RecentPickups = [
   { date: "Jan 15, 2025 5:30am", location: "Newroad", type: "Organic", amount: "50 kg", status: "Pending" },

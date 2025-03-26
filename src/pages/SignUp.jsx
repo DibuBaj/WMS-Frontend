@@ -40,7 +40,7 @@ const SignUp = () => {
         <p className="subtitle">Enter your details to get started</p>
         <form onSubmit={handleSubmit} className="form">
 
-        <label className="input-label-name">Full Name</label>
+        <label className="input-label">Full Name</label>
           <input
             type="text"
             name="fullName"
@@ -51,7 +51,7 @@ const SignUp = () => {
             required
           />
 
-        <label className="input-label-email">Email Address</label>
+        <label className="input-label">Email Address</label>
           <input
             type="email"
             name="email"
@@ -61,7 +61,7 @@ const SignUp = () => {
             className="input"
             required
           />
-          <label className="input-label-password">Password</label>
+          <label className="input-label">Password</label>
           <input
             type="password"
             name="password"
@@ -72,7 +72,7 @@ const SignUp = () => {
             required
           />
 
-        <label className="input-label-re-password">Confirm Password</label>
+        <label className="input-label">Confirm Password</label>
           <input
             type="password"
             name="confirmPassword"
