@@ -24,15 +24,15 @@ const Recentpickup = () => {
             </tr>
           </thead>
           <tbody>
-            {RecentPickups.map((pickup, index) => (
+            {RecentPickups.map((Pickup, index) => (
               <tr key={index}>
-                <td>{pickup.date}</td>
-                <td>{pickup.location}</td>
-                <td>{pickup.route}</td>
-                <td>{pickup.type}</td>
-                <td>{pickup.amount}</td>
-                <td className={pickup.status === "Pending" ? "status-pending" : "status-completed"}>
-                  {pickup.status}
+                <td>{Pickup.date}</td>
+                <td>{Pickup.location}</td>
+                <td>{Pickup.route}</td>
+                <td>{Pickup.type}</td>
+                <td>{Pickup.amount}</td>
+                <td className={Pickup.status === "Pending" ? "status-pending" : "status-completed"}>
+                  {Pickup.status}
                 </td>
               </tr>
             ))}
@@ -44,3 +44,7 @@ const Recentpickup = () => {
 };
 
 export default Recentpickup;
+
+
+
+

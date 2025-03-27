@@ -5,15 +5,15 @@ import Header from "../components/Userdashboard/Navbar/Header.jsx";
 const Settings = () => {
   return(
     <>
-    <Header />
-    <div className="user-settings">
-      <Sidebar />
-      <div className="settings-wrapper">
-       
+      <Header/>
+      <div className="user-setings">
+        <Sidebar />
+        <div className="settings-wrapper">
+          
+        </div>
       </div>
-    </div>
-  </>
-  )
+    </>
+  );
 };
 
 export default Settings;

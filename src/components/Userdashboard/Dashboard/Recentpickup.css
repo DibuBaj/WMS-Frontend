@@ -4,7 +4,7 @@
     background: rgb(250, 250, 250);
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 1060px; /* Adjust based on your design */
+    max-width: 1060px; 
 }
 
 .recent-pickups h2 {
@@ -31,7 +31,7 @@
 .status-pending {
     color: red !important;
     font-weight: bold;
-    display: inline-block; /* Ensures it's applied properly */
+    display: inline-block; 
 }
 
 .status-completed {
