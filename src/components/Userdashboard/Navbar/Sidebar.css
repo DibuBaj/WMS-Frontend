@@ -31,7 +31,7 @@
 }
 
 .sidebar {
-  width: 200px; /* Ensures consistent width */
+  width: 210px; /* Ensures consistent width */
   height: calc(100vh - 50px);
   background-color: #fff;
   padding-top: 20px;
@@ -55,10 +55,13 @@
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 20px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .sidebar li {
-  padding: 10px 20px;
   width: 100%; /* Ensure full width */
 }
 
