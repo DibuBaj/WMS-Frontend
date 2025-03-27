@@ -12,7 +12,7 @@ const Userdashboard = () => {
       <div className="user-dashboard">
         <Sidebar />
         <div className="dashboard-wrapper">
-          <Pickup />
+          <Pickup/>
           <Recentpickup />
         </div>
       </div>
