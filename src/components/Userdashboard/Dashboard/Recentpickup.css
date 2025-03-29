@@ -31,7 +31,6 @@
 .status-pending {
     color: red !important;
     font-weight: bold;
-    display: inline-block; 
 }
 
 .status-completed {

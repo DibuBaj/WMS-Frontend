@@ -12,9 +12,15 @@ const Userdashboard = () => {
     { date: "Jan 13, 2025 8:30am", location: "Newroad", route: "#123-Kathmandu", type: "Organic", amount: "25 kg", status: "Completed" },
   ]);
 
-  // Function to add a new pickup request
+  const [showPopup, setShowPopup] = useState(false); 
+
+  
   const addPickup = (newPickup) => {
-    setRecentPickups(prev => [newPickup, ...prev]); // Add new pickup to the top of the list
+    setRecentPickups(prev => [newPickup, ...prev]); 
+    setShowPopup(true); 
+
+    
+    setTimeout(() => setShowPopup(false), 3000);
   };
 
   return (
@@ -22,11 +28,19 @@ const Userdashboard = () => {
       <Header />
       <div className="user-dashboard">
         <Sidebar />
-        <div className="dashboard-wrapper">
-          <Pickup addPickup={addPickup} />  {/* Pass function to Pickup */}
-          <Recentpickup recentPickups={recentPickups} />  {/* Pass recent pickups data */}
+        <div className={`dashboard-wrapper ${showPopup ? "blurred" : ""}`}> 
+          <Pickup addPickup={addPickup} />
+          <Recentpickup recentPickups={recentPickups} />
         </div>
       </div>
+      
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-message">
+            <p>New pickup request added successfully!</p>
+          </div>
+        </div>
+      )}
     </>
   );
 };

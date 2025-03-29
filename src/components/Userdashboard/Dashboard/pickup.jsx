@@ -7,7 +7,8 @@ const Pickup = ({ addPickup }) => {
     location: '',
     route: '#123-Kathmandu',
     wasteType: 'Organic',
-    amount: ''
+    amount: '',
+    unit: 'kg' 
   });
 
   const handleChange = (e) => {
@@ -21,17 +22,28 @@ const Pickup = ({ addPickup }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     
+    const date = new Date(formData.dateTime);
+    
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    const formattedDate = date.toLocaleDateString("en-US", options); 
+    
+    const time = date.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    }); 
+
     const newPickup = {
-      date: new Date(formData.dateTime).toLocaleString(), // Format date-time
-      location: formData.location,
-      route: formData.route,
-      type: formData.wasteType,
-      amount: `${formData.amount} kg`,
-      status: "Pending" // Default status
+        date: `${formattedDate} ${time}`, 
+        location: formData.location,
+        route: formData.route,
+        type: formData.wasteType,
+        amount: `${formData.amount} ${formData.unit}`, 
+        status: "Pending" 
     };
 
     addPickup(newPickup);
-    setFormData({ dateTime: '', location: '', route: '#123-Kathmandu', wasteType: 'Organic', amount: '' });
+    setFormData({ dateTime: '', location: '', route: '#123-Kathmandu', wasteType: 'Organic', amount: '', unit: 'kg' });
   };
 
   return (
@@ -95,7 +107,7 @@ const Pickup = ({ addPickup }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Amount (kg)</label>
+          <label className="form-label">Amount</label>
           <input
             type="number"
             name="amount"
@@ -108,6 +120,20 @@ const Pickup = ({ addPickup }) => {
           />
         </div>
 
+        <div className="form-group">
+          <label className="form-label">Unit</label>
+          <select
+            name="unit"
+            value={formData.unit}
+            onChange={handleChange}
+            className="pickup-select"
+            required
+          >
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+          </select>
+        </div>
+
         <button type="submit" className="pickup-button">Schedule Pickup</button>
       </form>
     </div>
@@ -115,3 +141,4 @@ const Pickup = ({ addPickup }) => {
 };
 
 export default Pickup;
+
