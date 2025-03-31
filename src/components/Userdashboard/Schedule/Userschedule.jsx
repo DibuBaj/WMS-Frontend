@@ -25,7 +25,7 @@ const Userschedule = () => {
   };
 
   const handleSaveEdit = () => {
-    if (!editData.date || !editData.location || !editData.type || !editData.amount || !editData.status) {
+    if (!editData.date || !editData.location || !editData.type || !editData.amount) {
       setError("All fields are required.");
       return;
     }
@@ -130,10 +130,6 @@ const Userschedule = () => {
           <input type="text" value={editData.location} onChange={(e) => setEditData({ ...editData, location: e.target.value })} />
           <input type="text" value={editData.type} onChange={(e) => setEditData({ ...editData, type: e.target.value })} />
           <input type="text" value={editData.amount} onChange={(e) => setEditData({ ...editData, amount: e.target.value })} />
-          <select value={editData.status} onChange={(e) => setEditData({ ...editData, status: e.target.value })}>
-            <option value="Pending">Pending</option>
-            <option value="Completed">Completed</option>
-          </select>
           <button onClick={handleSaveEdit}>Save</button>
           <button onClick={closeEditPopup}>Close</button>
         </div>
@@ -143,3 +139,4 @@ const Userschedule = () => {
 };
 
 export default Userschedule;
+

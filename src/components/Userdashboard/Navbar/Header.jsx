@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
-import Recycle from "../../../assets/Recycle.svg";
-import Adminlogo from "../../../assets/Adminlogo.svg"; // Profile image
-import logout from "../../../assets/logout.png" // Logout icon
-import SettingsIcon from "../../../assets/Settings.svg"; // Settings icon
+import Logo from "../../../assets/Logo.svg"
+import Adminlogo from "../../../assets/Adminlogo.svg"; 
+import logout from "../../../assets/logout.png" 
+import SettingsIcon from "../../../assets/Settings.svg"; 
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -32,7 +32,7 @@ const Header = () => {
     <div className="header">
       {/* Top Navbar */}
       <div className="top-navbar">
-        <img src={Recycle} alt="GreenBin Logo" className="sidebar-logo" />
+        <img src={Logo} alt="GreenBin Logo" className="sidebar-logo" />
         <span className="GreenBinText">GreenBin</span>
         
         {/* Profile Icon with Dropdown */}
