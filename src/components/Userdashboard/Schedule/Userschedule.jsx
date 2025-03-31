@@ -1,44 +1,77 @@
 import React, { useState } from "react";
 import "./Userschedule.css";
 
-const data = [
-  { date: "Jan 15, 2025 09:00 AM", location: "Newroad",  type: "Organic", amount: "250 kg", status: "Pending" },
-  { date: "Jan 16, 2025 10:30 AM", location: "Newroad",  type: "Recyclable", amount: "180 kg", status: "Completed" },
-  { date: "Jan 17, 2025 02:00 PM", location: "Newroad",  type: "Recyclable", amount: "75 kg", status: "Completed" },
-  { date: "Jan 18, 2025 04:00 PM", location: "Suryabinayak",  type: "Organic", amount: "200 kg", status: "Pending" },
-  { date: "Jan 19, 2025 06:00 PM", location: "Newroad",  type: "Organic", amount: "150 kg", status: "Pending" },
-  { date: "Jan 20, 2025 08:00 AM", location: "Newroad",  type: "Recyclable", amount: "300 kg", status: "Completed" },
-  { date: "Jan 21, 2025 10:00 AM", location: "Newroad",  type: "Organic", amount: "220 kg", status: "Pending" },
-  { date: "Jan 22, 2025 12:00 PM", location: "Newroad",  type: "Recyclable", amount: "100 kg", status: "Completed" },
-  { date: "Jan 23, 2025 02:00 PM", location: "Newroad",  type: "Organic", amount: "130 kg", status: "Pending" },
-  { date: "Jan 24, 2025 04:00 PM", location: "Newroad",  type: "Recyclable", amount: "250 kg", status: "Completed" }
+const initialData = [
+  { id: 1, date: "Jan 15, 2025 09:00 AM", location: "Newroad", type: "Organic", amount: "250 kg", status: "Pending" },
+  { id: 2, date: "Jan 16, 2025 10:30 AM", location: "Newroad", type: "Recyclable", amount: "180 kg", status: "Completed" },
+  { id: 3, date: "Jan 17, 2025 02:00 PM", location: "Newroad", type: "Recyclable", amount: "75 kg", status: "Completed" }
 ];
 
 const Userschedule = () => {
+  const [data, setData] = useState(initialData);
+  const [menuOpen, setMenuOpen] = useState(null);
+  const [editItem, setEditItem] = useState(null);
+  const [editData, setEditData] = useState({});
+  const [popupMessage, setPopupMessage] = useState("");
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3;
+  const [error, setError] = useState("");
+
+  const handleEdit = (item) => {
+    setEditItem(item.id);
+    setEditData(item);
+    setMenuOpen(null);
+    document.body.classList.add("blur-active");
+  };
+
+  const handleSaveEdit = () => {
+    if (!editData.date || !editData.location || !editData.type || !editData.amount || !editData.status) {
+      setError("All fields are required.");
+      return;
+    }
+    setData(data.map((item) => (item.id === editItem ? editData : item)));
+    setEditItem(null);
+    setError("");
+    showPopup("Edited Successfully!");
+    document.body.classList.remove("blur-active");
+  };
+
+  const handleCancel = (id) => {
+    setData(data.filter((item) => item.id !== id));
+    setMenuOpen(null);
+    showPopup("Deleted Successfully!");
+  };
+
+  const showPopup = (message) => {
+    setPopupMessage(message);
+    document.body.classList.add("blur-active");
+    setTimeout(() => {
+      setPopupMessage("");
+      document.body.classList.remove("blur-active");
+    }, 2000);
+  };
+
+  const closeEditPopup = () => {
+    setEditItem(null);
+    setError("");
+    document.body.classList.remove("blur-active");
+  };
 
   const filteredData = data.filter((row) => {
     return (
       (filterType === "All" || row.type.toLowerCase() === filterType.toLowerCase()) &&
-      (
-        row.location.toLowerCase().includes(search.toLowerCase()) || 
-        row.type.toLowerCase().includes(search.toLowerCase()) || 
-        row.status.toLowerCase().includes(search.toLowerCase()) || 
-        row.amount.toLowerCase().includes(search.toLowerCase()) ||  
-        row.date.toLowerCase().includes(search.toLowerCase())  
-      )
+      (row.location.toLowerCase().includes(search.toLowerCase()) ||
+        row.type.toLowerCase().includes(search.toLowerCase()) ||
+        row.status.toLowerCase().includes(search.toLowerCase()) ||
+        row.amount.toLowerCase().includes(search.toLowerCase()) ||
+        row.date.toLowerCase().includes(search.toLowerCase()))
     );
   });
-  
-  const paginatedData = filteredData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   return (
-    <div className="container">
+    <div className={`container ${editItem !== null || popupMessage ? "blur-background" : ""}`}>
       <h2 className="title">Waste Collection Schedule</h2>
+      {popupMessage && <div className="popup-message">{popupMessage}</div>}
 
       <div className="controls">
         <input
@@ -60,44 +93,53 @@ const Userschedule = () => {
           <tr>
             <th>Date & Time</th>
             <th>Location</th>
-            {/* <th>Route</th> */}
             <th>Type</th>
             <th>Amount</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((row, index) => (
-            <tr key={index}>
+          {filteredData.map((row) => (
+            <tr key={row.id}>
               <td>{row.date}</td>
               <td>{row.location}</td>
-              {/* <td>{row.route}</td> */}
               <td><span className="type-badge">{row.type}</span></td>
               <td>{row.amount}</td>
-              <td className={row.status === "Pending" ? "status-pending" : "status-completed"}>{row.status}</td>
+              <td className="status-container">
+                <span className={row.status === "Pending" ? "status-pending" : "status-completed"}>{row.status}</span>
+                <button className="menu-btn" onClick={() => setMenuOpen(menuOpen === row.id ? null : row.id)}>⋮</button>
+                {menuOpen === row.id && (
+                  <div className="dropdown-menu">
+                    <button onClick={() => handleEdit(row)}>Edit</button>
+                    <button onClick={() => handleCancel(row.id)}>Delete</button>
+                  </div>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Pagination Controls */}
-      <div className="pagination">
-        <p>Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredData.length)} of {filteredData.length} entries</p>
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            className={i + 1 === currentPage ? "active" : ""}
-            onClick={() => setCurrentPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)}>Next</button>
-      </div>
+      {editItem !== null && <div className="overlay" onClick={closeEditPopup}></div>}
+
+      {editItem !== null && (
+        <div className="edit-popup">
+          <h3>Edit Entry</h3>
+          {error && <p className="error-message">{error}</p>}
+          <input type="text" value={editData.date} onChange={(e) => setEditData({ ...editData, date: e.target.value })} />
+          <input type="text" value={editData.location} onChange={(e) => setEditData({ ...editData, location: e.target.value })} />
+          <input type="text" value={editData.type} onChange={(e) => setEditData({ ...editData, type: e.target.value })} />
+          <input type="text" value={editData.amount} onChange={(e) => setEditData({ ...editData, amount: e.target.value })} />
+          <select value={editData.status} onChange={(e) => setEditData({ ...editData, status: e.target.value })}>
+            <option value="Pending">Pending</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <button onClick={handleSaveEdit}>Save</button>
+          <button onClick={closeEditPopup}>Close</button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default Userschedule;
-
