@@ -6,12 +6,12 @@
     font-family: 'Arial', sans-serif;
   }
   
-  .sidebar {
+  /* .sidebar {
     width: 250px;
     background-color: #2e7d32;
     color: white;
     padding: 20px;
-  }
+  } */
   
   .main-content {
     flex: 1;
@@ -163,7 +163,7 @@
   }
   
   /* Sidebar Styles */
-  .sidebar-header {
+  /* .sidebar-header {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -172,18 +172,18 @@
   
   .sidebar-logo-icon {
     color: white;
-  }
+  } */
   
-  .sidebar-logo-text {
+  /* .sidebar-logo-text {
     margin: 0;
     font-size: 20px;
-  }
+  } */
   
-  .sidebar-nav {
+  /* .sidebar-nav {
     display: flex;
     flex-direction: column;
     gap: 5px;
-  }
+  } */
   
   .nav-item {
     display: flex;
