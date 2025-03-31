@@ -74,7 +74,7 @@ const SignIn = () => {
           </button>
         </form>
         <p className="signup-text">
-          Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
+          Don't have an account? <a href="/" className="signup-link">Sign up</a>
         </p>
       </div>
     </div>

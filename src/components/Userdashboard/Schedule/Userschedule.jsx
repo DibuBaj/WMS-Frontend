@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import "./Userschedule.css";
 
 const data = [
-  { date: "Jan 15, 2025 09:00 AM", location: "Newroad", route: "#123-Kathmandu", type: "Organic", amount: "250 kg", status: "Pending" },
-  { date: "Jan 16, 2025 10:30 AM", location: "Newroad", route: "#123-Kathmandu", type: "Recyclable", amount: "180 kg", status: "Completed" },
-  { date: "Jan 17, 2025 02:00 PM", location: "Newroad", route: "#123-Kathmandu", type: "Recyclable", amount: "75 kg", status: "Completed" },
-  { date: "Jan 18, 2025 04:00 PM", location: "Suryabinayak", route: "#123-Bhaktapur", type: "Organic", amount: "200 kg", status: "Pending" },
-  { date: "Jan 19, 2025 06:00 PM", location: "Newroad", route: "#123-Kathmandu", type: "Organic", amount: "150 kg", status: "Pending" },
-  { date: "Jan 20, 2025 08:00 AM", location: "Newroad", route: "#123-Kathmandu", type: "Recyclable", amount: "300 kg", status: "Completed" },
-  { date: "Jan 21, 2025 10:00 AM", location: "Newroad", route: "#123-Kathmandu", type: "Organic", amount: "220 kg", status: "Pending" },
-  { date: "Jan 22, 2025 12:00 PM", location: "Newroad", route: "#123-Kathmandu", type: "Recyclable", amount: "100 kg", status: "Completed" },
-  { date: "Jan 23, 2025 02:00 PM", location: "Newroad", route: "#123-Kathmandu", type: "Organic", amount: "130 kg", status: "Pending" },
-  { date: "Jan 24, 2025 04:00 PM", location: "Newroad", route: "#123-Kathmandu", type: "Recyclable", amount: "250 kg", status: "Completed" }
+  { date: "Jan 15, 2025 09:00 AM", location: "Newroad",  type: "Organic", amount: "250 kg", status: "Pending" },
+  { date: "Jan 16, 2025 10:30 AM", location: "Newroad",  type: "Recyclable", amount: "180 kg", status: "Completed" },
+  { date: "Jan 17, 2025 02:00 PM", location: "Newroad",  type: "Recyclable", amount: "75 kg", status: "Completed" },
+  { date: "Jan 18, 2025 04:00 PM", location: "Suryabinayak",  type: "Organic", amount: "200 kg", status: "Pending" },
+  { date: "Jan 19, 2025 06:00 PM", location: "Newroad",  type: "Organic", amount: "150 kg", status: "Pending" },
+  { date: "Jan 20, 2025 08:00 AM", location: "Newroad",  type: "Recyclable", amount: "300 kg", status: "Completed" },
+  { date: "Jan 21, 2025 10:00 AM", location: "Newroad",  type: "Organic", amount: "220 kg", status: "Pending" },
+  { date: "Jan 22, 2025 12:00 PM", location: "Newroad",  type: "Recyclable", amount: "100 kg", status: "Completed" },
+  { date: "Jan 23, 2025 02:00 PM", location: "Newroad",  type: "Organic", amount: "130 kg", status: "Pending" },
+  { date: "Jan 24, 2025 04:00 PM", location: "Newroad",  type: "Recyclable", amount: "250 kg", status: "Completed" }
 ];
 
 const Userschedule = () => {
@@ -25,7 +25,6 @@ const Userschedule = () => {
       (filterType === "All" || row.type.toLowerCase() === filterType.toLowerCase()) &&
       (
         row.location.toLowerCase().includes(search.toLowerCase()) || 
-        row.route.toLowerCase().includes(search.toLowerCase()) || 
         row.type.toLowerCase().includes(search.toLowerCase()) || 
         row.status.toLowerCase().includes(search.toLowerCase()) || 
         row.amount.toLowerCase().includes(search.toLowerCase()) ||  
@@ -61,7 +60,7 @@ const Userschedule = () => {
           <tr>
             <th>Date & Time</th>
             <th>Location</th>
-            <th>Route</th>
+            {/* <th>Route</th> */}
             <th>Type</th>
             <th>Amount</th>
             <th>Status</th>
@@ -72,7 +71,7 @@ const Userschedule = () => {
             <tr key={index}>
               <td>{row.date}</td>
               <td>{row.location}</td>
-              <td>{row.route}</td>
+              {/* <td>{row.route}</td> */}
               <td><span className="type-badge">{row.type}</span></td>
               <td>{row.amount}</td>
               <td className={row.status === "Pending" ? "status-pending" : "status-completed"}>{row.status}</td>

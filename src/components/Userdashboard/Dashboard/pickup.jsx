@@ -5,7 +5,7 @@ const Pickup = ({ addPickup }) => {
   const [formData, setFormData] = useState({
     dateTime: '',
     location: '',
-    route: '#123-Kathmandu',
+    subscription: '1 Day ($1)',
     wasteType: 'Organic',
     amount: '',
     unit: 'kg' 
@@ -36,14 +36,14 @@ const Pickup = ({ addPickup }) => {
     const newPickup = {
         date: `${formattedDate} ${time}`, 
         location: formData.location,
-        route: formData.route,
+        subscription: formData.subscription,
         type: formData.wasteType,
         amount: `${formData.amount} ${formData.unit}`, 
         status: "Pending" 
     };
 
     addPickup(newPickup);
-    setFormData({ dateTime: '', location: '', route: '#123-Kathmandu', wasteType: 'Organic', amount: '', unit: 'kg' });
+    setFormData({ dateTime: '', location: '', subscription: '1 Day ($1)', wasteType: 'Organic', amount: '', unit: 'kg' });
   };
 
   return (
@@ -77,17 +77,17 @@ const Pickup = ({ addPickup }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Route</label>
+          <label className="form-label">Subscription</label>
           <select
-            name="route"
-            value={formData.route}
+            name="subscription"
+            value={formData.subscription}
             onChange={handleChange}
             className="pickup-select"
             required
           >
-            <option value="#123-Kathmandu">#123-Kathmandu</option>
-            <option value="#12-Bhaktapur">#12-Bhaktapur</option>
-            <option value="#1234-Lalitpur">#1234-Lalitpur</option>
+            <option value="1d">1 Day ($1)</option>
+            <option value="1m">1 Day ($10)</option>
+            <option value="1y">1 Day ($100)</option>
           </select>
         </div>
 
