@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import "./Pickup.css";
 
 const Pickup = ({ addPickup }) => {
   const [formData, setFormData] = useState({
+    address: '',
     dateTime: '',
-    location: '',
     subscription: '1 Day ($1)',
     wasteType: 'Organic',
     amount: '',
-    unit: 'kg' 
+    unit: 'kg'
   });
+
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,37 +22,74 @@ const Pickup = ({ addPickup }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const date = new Date(formData.dateTime);
-    
-    const options = { month: "short", day: "numeric", year: "numeric" };
-    const formattedDate = date.toLocaleDateString("en-US", options); 
-    
-    const time = date.toLocaleString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true
-    }); 
+    setError(''); // Clear previous errors
 
-    const newPickup = {
-        date: `${formattedDate} ${time}`, 
-        location: formData.location,
-        subscription: formData.subscription,
-        type: formData.wasteType,
-        amount: `${formData.amount} ${formData.unit}`, 
-        status: "Pending" 
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("User not authenticated. Please log in.");
+      return;
+    }
+
+    // Validate fields before sending request
+    if (!formData.dateTime || !formData.address || !formData.amount) {
+      setError("All fields are required.");
+      return;
+    }
+
+    // Prepare payload (ensure proper format)
+    const payload = {
+      address: formData.address,  // ✅ FIX: Include location
+      pickupDateTime: new Date(formData.dateTime).toISOString(),
+      subscription: formData.subscription,
+      wasteType: formData.wasteType.toLowerCase(),
+      amount: Number(formData.amount),  // ✅ FIX: Ensure amount is a number
+      unit: formData.unit
     };
 
-    addPickup(newPickup);
-    setFormData({ dateTime: '', location: '', subscription: '1 Day ($1)', wasteType: 'Organic', amount: '', unit: 'kg' });
+    console.log("Sending Payload:", payload); // Debugging log
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/pickups",
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Attach token for authentication
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Pickup Scheduled Successfully:", response.data);
+      addPickup(response.data); // Update UI with the new pickup
+
+      // Reset form fields after successful request
+      setFormData({
+        address: '',
+        dateTime: '',
+        subscription: '1 Day ($1)',
+        wasteType: 'Organic',
+        amount: '',
+        unit: 'kg'
+      });
+
+    } catch (err) {
+      console.error("Full Error Response:", err.response); // Debugging log
+      setError(err.response?.data?.message || "Failed to schedule pickup");
+    }
   };
 
   return (
     <div className="pickup-containerr">
       <h2 className='Maintext'>New Pickup Request</h2>
       <p className='subtext'>Schedule a new waste collection</p>
+      
+      {error && <p className="error-message">{error}</p>} {/* Show error message */}
+
       <form className="pickup-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label className="form-label">Pickup Date & Time</label>
@@ -64,11 +104,11 @@ const Pickup = ({ addPickup }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Location</label>
+          <label className="form-label">Address</label>
           <input
             type="text"
-            name="location"
-            value={formData.location}
+            name="address"
+            value={formData.address}
             onChange={handleChange}
             placeholder="Enter address"
             className="pickup-input"
@@ -85,9 +125,9 @@ const Pickup = ({ addPickup }) => {
             className="pickup-select"
             required
           >
-            <option value="1d">1 Day ($1)</option>
-            <option value="1m">1 Day ($10)</option>
-            <option value="1y">1 Day ($100)</option>
+            <option value="1 Day ($1)">1 Day ($1)</option>
+            <option value="1 Month ($10)">1 Month ($10)</option>
+            <option value="1 Year ($100)">1 Year ($100)</option>
           </select>
         </div>
 
@@ -141,4 +181,9 @@ const Pickup = ({ addPickup }) => {
 };
 
 export default Pickup;
+
+
+
+
+
 

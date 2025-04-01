@@ -73,6 +73,7 @@ const SignUp = () => {
     }
   };
   
+  
   return (
     <div className="container">
       <div className="background-container">
@@ -158,3 +159,11 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
+
+
+
+
+
+
