@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import "../styles/signin.css";
 import Logo from "../assets/Logo.svg";
 
@@ -10,6 +11,7 @@ const SignIn = () => {
     password: "",
     rememberMe: false,
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -19,10 +21,23 @@ const SignIn = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle authentication logic here
-    console.log("Signed In", formData);
+    setError("");
+    
+    try {
+      const response = await axios.post("http://localhost:3000/api/users/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+      
+      console.log("Signed In", response.data);
+      localStorage.setItem("token", response.data.token); // Save token for authentication
+      
+      navigate("/userdashboard"); // Redirect to dashboard after successful login
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid credentials");
+    }
   };
 
   return (
@@ -33,6 +48,7 @@ const SignIn = () => {
       <div className="form-box">
         <h2 className="title">Welcome to GreenBin</h2>
         <p className="subtitle">Sign in to your account</p>
+        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit} className="form">
           <label htmlFor="email" className="label">Email</label>
           <input
@@ -74,7 +90,7 @@ const SignIn = () => {
           </button>
         </form>
         <p className="signup-text">
-          Don't have an account? <a href="/" className="signup-link">Sign up</a>
+          Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
         </p>
       </div>
     </div>
