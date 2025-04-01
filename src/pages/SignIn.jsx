@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/signin.css";
 import Logo from "../assets/Logo.svg";
-// import LoadingImage from "../assets/loading.png"; // Import the image
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -26,25 +25,24 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true); // Start loading
+    setLoading(true);
 
     setTimeout(async () => {
       try {
-        const response = await axios.post("http://localhost:3000/api/users/login", {
+        const response = await axios.post("http://localhost:3000/api/auth/login", {
           email: formData.email,
           password: formData.password,
         });
 
         console.log("Signed In", response.data);
         localStorage.setItem("token", response.data.token);
-
         navigate("/userdashboard");
       } catch (err) {
         setError(err.response?.data?.message || "Invalid credentials");
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
-    }, 2000); // 2-second delay
+    }, 2000);
   };
 
   return (
@@ -56,15 +54,12 @@ const SignIn = () => {
         <h2 className="title">Welcome to GreenBin</h2>
         <p className="subtitle">Sign in to your account</p>
         {error && <p className="error-message">{error}</p>}
-        
-        {loading && (
+
+        {loading ? (
           <div className="loading-container">
-            <img src={LoadingImage} alt="Loading..." className="loading-img" />
             <p>Signing in...</p>
           </div>
-        )}
-
-        {!loading && (
+        ) : (
           <form onSubmit={handleSubmit} className="form">
             <label htmlFor="email" className="label">Email</label>
             <input
@@ -77,6 +72,7 @@ const SignIn = () => {
               className="input"
               required
             />
+
             <label htmlFor="password" className="label">Password</label>
             <input
               type="password"
@@ -88,11 +84,13 @@ const SignIn = () => {
               className="input"
               required
             />
+
             <div className="options-container">
               <div className="checkbox-container">
                 <input
                   type="checkbox"
                   name="rememberMe"
+                  id="rememberMe"
                   checked={formData.rememberMe}
                   onChange={handleChange}
                   className="checkbox"
@@ -101,14 +99,13 @@ const SignIn = () => {
               </div>
               <a href="#" className="forgot-password">Forgot password?</a>
             </div>
-            <button type="submit" className="submit-btn">
-              Sign in
-            </button>
+
+            <button type="submit" className="submit-btn">Sign in</button>
           </form>
         )}
 
         <p className="signup-text">
-          Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
+          Don't have an account? <a href="/" className="signup-link">Sign up</a>
         </p>
       </div>
     </div>

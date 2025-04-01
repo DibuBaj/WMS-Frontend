@@ -1,7 +1,7 @@
 .pickup-containerr {
   
   padding: 30px;
-  max-width: 420px;
+  /* max-width: 420px; */
   flex: 1;
   overflow-y: auto;
 }

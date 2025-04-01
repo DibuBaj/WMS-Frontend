@@ -24,33 +24,36 @@ const Pickup = ({ addPickup }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError('');
 
-    // Retrieve the token from localStorage
     const token = localStorage.getItem("token");
-
     if (!token) {
       setError("User not authenticated. Please log in.");
       return;
     }
 
-    // Validate fields before sending request
-    if (!formData.dateTime || !formData.address || !formData.amount) {
+    const { address, dateTime, subscription, wasteType, amount, unit } = formData;
+
+    if (!address || !dateTime || !amount) {
       setError("All fields are required.");
       return;
     }
 
-    // Prepare payload (ensure proper format)
+    if (isNaN(Number(amount))) {
+      setError("Amount must be a number.");
+      return;
+    }
+
     const payload = {
-      address: formData.address,  // ✅ FIX: Include location
-      pickupDateTime: new Date(formData.dateTime).toISOString(),
-      subscription: formData.subscription,
-      wasteType: formData.wasteType.toLowerCase(),
-      amount: Number(formData.amount),  // ✅ FIX: Ensure amount is a number
-      unit: formData.unit
+      address,
+      pickupDateTime: new Date(dateTime).toISOString(),
+      subscription,
+      wasteType: wasteType.toLowerCase(), // match schema: 'organic', 'recyclable', etc.
+      amount: Number(amount),
+      unit
     };
 
-    console.log("Sending Payload:", payload); // Debugging log
+    console.log("Sending Payload:", payload);
 
     try {
       const response = await axios.post(
@@ -58,16 +61,15 @@ const Pickup = ({ addPickup }) => {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach token for authentication
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
       );
 
       console.log("Pickup Scheduled Successfully:", response.data);
-      addPickup(response.data); // Update UI with the new pickup
+      addPickup(response.data);
 
-      // Reset form fields after successful request
       setFormData({
         address: '',
         dateTime: '',
@@ -78,8 +80,8 @@ const Pickup = ({ addPickup }) => {
       });
 
     } catch (err) {
-      console.error("Full Error Response:", err.response); // Debugging log
-      setError(err.response?.data?.message || "Failed to schedule pickup");
+      console.error("Submission Error:", err);
+      setError(err.response?.data?.message || "Failed to schedule pickup.");
     }
   };
 
@@ -87,8 +89,8 @@ const Pickup = ({ addPickup }) => {
     <div className="pickup-containerr">
       <h2 className='Maintext'>New Pickup Request</h2>
       <p className='subtext'>Schedule a new waste collection</p>
-      
-      {error && <p className="error-message">{error}</p>} {/* Show error message */}
+
+      {error && <p className="error-message">{error}</p>}
 
       <form className="pickup-form" onSubmit={handleSubmit}>
         <div className="form-group">
@@ -110,7 +112,7 @@ const Pickup = ({ addPickup }) => {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            placeholder="Enter address"
+            placeholder="Enter pickup address"
             className="pickup-input"
             required
           />
@@ -143,6 +145,7 @@ const Pickup = ({ addPickup }) => {
             <option value="Organic">Organic</option>
             <option value="Recyclable">Recyclable</option>
             <option value="Non-Recyclable">Non-Recyclable</option>
+            <option value="All">All</option>
           </select>
         </div>
 
@@ -181,9 +184,3 @@ const Pickup = ({ addPickup }) => {
 };
 
 export default Pickup;
-
-
-
-
-
-

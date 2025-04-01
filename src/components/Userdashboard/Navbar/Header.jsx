@@ -1,20 +1,41 @@
 import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./Sidebar.css";
-import Logo from "../../../assets/Logo.svg"
+
+import Logo from "../../../assets/Logo.svg";
 import Adminlogo from "../../../assets/Adminlogo.svg"; 
-import logout from "../../../assets/logout.png" 
+import logout from "../../../assets/logout.png";
 import SettingsIcon from "../../../assets/Settings.svg"; 
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
-  // Toggle dropdown menu on clicking profile icon
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
 
-  // Close dropdown when clicking outside
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.post("http://localhost:3000/api/auth/logout", {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      localStorage.removeItem("token");
+      navigate("/signin");
+    } catch (err) {
+      console.error("Logout failed:", err);
+      // Even if API fails, remove token and navigate
+      localStorage.removeItem("token");
+      navigate("/signin");
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".profile-container")) {
@@ -30,26 +51,23 @@ const Header = () => {
 
   return (
     <div className="header">
-      {/* Top Navbar */}
       <div className="top-navbar">
         <img src={Logo} alt="GreenBin Logo" className="sidebar-logo" />
         <span className="GreenBinText">GreenBin</span>
-        
-        {/* Profile Icon with Dropdown */}
+
         <div className="profile-container" onClick={toggleDropdown}>
           <img src={Adminlogo} alt="Profile" className="profile-icon" />
-          
-          {/* Dropdown Menu (Only visible when showDropdown is true) */}
+
           {showDropdown && (
             <div className="dropdown-menu">
               <NavLink to="/settings" className="dropdown-item">
                 <img src={SettingsIcon} alt="Settings" className="dropdown-icon" />
                 Settings
               </NavLink>
-              <NavLink to="/signin" className="dropdown-item">
+              <div className="dropdown-item" onClick={handleLogout}>
                 <img src={logout} alt="Logout" className="dropdown-icon" />
                 Logout
-              </NavLink>
+              </div>
             </div>
           )}
         </div>
@@ -59,11 +77,3 @@ const Header = () => {
 };
 
 export default Header;
-
-
-
-
-
-
-
-
