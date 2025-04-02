@@ -21,6 +21,7 @@ function App() {
         <Route path="/schedule" element={<Schedule/>} />
         <Route path="/settings" element={<Settings/>} />
         <Route path = "/collection" element={<Collection/>}/>
+        <Route path = "/pickupmanagement" element={<PickupManagement/>}/>
       </Routes>
     </Router>
   );
