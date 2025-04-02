@@ -5,8 +5,9 @@ import './Collection.css';
 
 const CollectionPage = () => {
   return (
+    <div>
+      <Header/>
     <div className="collection-container">
-      <Header title="GreenBin" />
       <Sidebarr />
       
       <div className="collection-content">
@@ -48,6 +49,7 @@ const CollectionPage = () => {
 
         <button className="collection-new-btn">New Collection</button>
       </div>
+    </div>
     </div>
   );
 };

@@ -69,8 +69,9 @@ export default function PickupManagement() {
   };
 
   return (
+    <div>
+      <Header/>
     <div className="pickup-container">
-      <Header title="Pickup Management" />
       <Sidebarr />
       
       <div className="pickup-content">
@@ -154,6 +155,7 @@ export default function PickupManagement() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

@@ -6,8 +6,9 @@ import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
   return (
+    <div>
+      <Header />
     <div className="dashboard-container">
-      <Header title="GreenBin" />
       <Sidebarr />
       
       <div className="dashboard-content">
@@ -86,6 +87,7 @@ export default function AdminDashboard() {
           View All
         </button>
       </div>
+    </div>
     </div>
   );
 }

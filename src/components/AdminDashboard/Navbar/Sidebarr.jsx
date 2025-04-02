@@ -21,7 +21,7 @@ const Sidebarr = () => {
   }, []);
 
   return (
-    <nav className="sidebar">
+    <nav className="sidebarr">
       <ul className="sidebar__menu">
         <li className="sidebar__menu-item">
           <NavLink 
