@@ -1,14 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Userschedule.css";
 
-const initialData = [
-  { id: 1, date: "Jan 15, 2025 09:00 AM", location: "Newroad", type: "Organic", amount: "250 kg", status: "Pending" },
-  { id: 2, date: "Jan 16, 2025 10:30 AM", location: "Newroad", type: "Recyclable", amount: "180 kg", status: "Completed" },
-  { id: 3, date: "Jan 17, 2025 02:00 PM", location: "Newroad", type: "Recyclable", amount: "75 kg", status: "Completed" }
-];
-
 const Userschedule = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
   const [menuOpen, setMenuOpen] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [editData, setEditData] = useState({});
@@ -16,6 +10,46 @@ const Userschedule = () => {
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("All");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  // Get the token from localStorage
+  const token = localStorage.getItem('token'); 
+
+  // Fetch data from API on component mount
+  useEffect(() => {
+    const fetchPickupsHistory = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/pickups/history", {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,  // Send token in the header
+          },
+        });
+        const result = await response.json();
+        
+        if (result.message === "Pickup history retrieved successfully for user") {
+          // Transform the API data into the required format
+          const transformedData = result.pickups.map((pickup) => ({
+            id: pickup._id,
+            date: new Date(pickup.pickupDateTime).toLocaleString(),
+            location: `${pickup.pickupLocation.coordinates[0]}, ${pickup.pickupLocation.coordinates[1]}`,
+            type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
+            amount: `${pickup.amount} ${pickup.unit}`,
+            status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
+          }));
+          setData(transformedData);
+        } else {
+          setError("Failed to load pickup history.");
+        }
+      } catch (err) {
+        setError("An error occurred while fetching the data.");
+      } finally {
+        setLoading(false);  // Stop the loading spinner
+      }
+    };
+
+    fetchPickupsHistory();
+  }, [token]);
 
   const handleEdit = (item) => {
     setEditItem(item.id);
@@ -68,6 +102,10 @@ const Userschedule = () => {
     );
   });
 
+  if (loading) {
+    return <div>Loading...</div>; // Display loading text while data is being fetched
+  }
+
   return (
     <div className={`container ${editItem !== null || popupMessage ? "blur-background" : ""}`}>
       <h2 className="title">Waste Collection Schedule</h2>
@@ -87,6 +125,8 @@ const Userschedule = () => {
           <option value="Recyclable">Recyclable</option>
         </select>
       </div>
+
+      {error && <div className="error-message">{error}</div>}
 
       <table className="data-table">
         <thead>
@@ -139,6 +179,3 @@ const Userschedule = () => {
 };
 
 export default Userschedule;
-
-
-
