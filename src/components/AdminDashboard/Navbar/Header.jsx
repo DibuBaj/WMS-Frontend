@@ -1,11 +1,22 @@
 import React from 'react';
 import './Header.css';
 
-const Header = ({ title }) => {
+import Logo from "../../../assets/Logo.svg";
+import Adminlogo from "../../../assets/Adminlogo.svg"; 
+
+
+const Header = () => {
   return (
-    <header className="dashboard-header">
-      <h1>{title}</h1>
-    </header>
+    <div className="header">
+          <div className="top-navbar">
+            <img src={Logo} alt="GreenBin Logo" className="sidebar-logo" />
+            <span className="GreenBinText">GreenBin</span>
+    
+            <div className="profile-container">
+              <img src={Adminlogo} alt="Profile" className="profile-icon" />
+            </div>
+        </div>
+    </div>
   );
 };
 
