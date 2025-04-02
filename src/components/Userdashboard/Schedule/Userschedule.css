@@ -242,7 +242,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 88%;
+  /* width: 88%; */
 }
 
 .status-text {
