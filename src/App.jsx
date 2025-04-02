@@ -5,13 +5,10 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Userdashboard from "./pages/Userdashboard";
 import AdminDashboard from "./components/AdminDashboard/Dashboard/AdminDashboard";
-import Collection from "./components/AdminDashboard/Dashboard/Collection"
+import Collection from "./components/AdminDashboard/Dashboard/Collection";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
-
-
-
-
+import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
 
 function App() {
   return (
