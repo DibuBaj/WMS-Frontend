@@ -6,13 +6,16 @@ html, body {
   overflow: hidden;
 }
 .container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #f3f4f6;
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3); 
+  backdrop-filter: blur(5px); 
+}
+
   .logo-wrapper {
     position: absolute;
     display: flex;
@@ -29,13 +32,14 @@ html, body {
   }
   
   .form-box {
-    background: rgb(190, 217, 171);
+    background: rgba(190, 217, 171, 0.85); 
     padding: 24px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 350px;
     text-align: center;
   }
+  
   
   .title {
     font-size: 20px;
@@ -67,8 +71,8 @@ html, body {
     color: #395849;
     margin-bottom: 4px;
     position: relative;
-    top: 10px; /* Moves the label downward */
-    left: 5px; /* Moves the label to the right */
+    top: 10px; 
+    left: 5px; 
     text-align: left;
   }
   

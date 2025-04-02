@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../styles/signin.css";
 import Logo from "../assets/Logo.svg";
+import Background from "../assets/Background.png";
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -46,7 +47,19 @@ const SignIn = () => {
   };
 
   return (
-    <div className="container">
+    <div
+    className="signin-container"
+    style={{
+      backgroundImage: `url(${Background})`, 
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      minHeight: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
       <div className="logo-wrapper">
         <img src={Logo} alt="GreenBin Logo" className="logo-img" />
       </div>

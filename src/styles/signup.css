@@ -3,7 +3,6 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: #f3f4f6;
   }
 
 .form-box {
@@ -23,30 +22,6 @@
   color: #395849;
   font-weight: bold;
 }
-/* .input-label-email{
-  padding-right: 260px;
-  font-size: small;
-  position: relative;
-  bottom: -5px;
-  color: #395849;
-  font-weight: bold;
-}
-.input-label-password{
-  display: flex;
-  font-size: small;
-  position: relative;
-  bottom: -5px;
-  color: #395849;
-  font-weight: bold;
-}
-.input-label-re-password{
-  padding-right: 240px;
-  font-size: small;
-  position: relative;
-  bottom: -5px;
-  color: #395849;
-  font-weight: bold;
-} */
 .title {
   font-size: 20px;
   font-weight: bold;

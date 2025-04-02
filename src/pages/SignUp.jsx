@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/signup.css";
 import Logo from "../assets/Logo.svg";
+import Background from "../assets/Background.png";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const SignUp = () => {
         throw new Error("Failed to register user");
       }
 
-      return await response.json(); // Return API response
+      return await response.json(); 
     } catch (error) {
       throw new Error(error.message);
     }
@@ -55,7 +56,6 @@ const SignUp = () => {
     }
   
     try {
-      // Ensure only required fields are sent
       const userData = {
         fullName: formData.fullName,
         email: formData.email,
@@ -66,7 +66,7 @@ const SignUp = () => {
       setSuccessMessage("Account created successfully! Redirecting...");
   
       setTimeout(() => {
-        navigate("/signin"); // Navigate to sign-in page
+        navigate("/signin"); 
       }, 2000);
     } catch (error) {
       setErrorMessage(error.message || "Registration failed");
@@ -75,7 +75,19 @@ const SignUp = () => {
   
   
   return (
-    <div className="container">
+    <div
+      className="signup-container"
+      style={{
+        backgroundImage: `url(${Background})`, 
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <div className="background-container">
         <div className="logo-wrapper">
           <img src={Logo} alt="GreenBin Logo" className="logo-imgg" />
