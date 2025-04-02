@@ -27,8 +27,11 @@ function App() {
         <Route path="/settings" element={<Settings/>} />
         <Route path = "/collection" element={<Collection/>}/>
         <Route path = "/pickupmanagement" element={<PickupManagement/>}/>
+<<<<<<< HEAD
         <Route path="/Otpverification" element={<Otp/>} />
 
+=======
+>>>>>>> 7927c1b (App)
       </Routes>
     </Router>
   );
