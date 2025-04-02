@@ -10,6 +10,7 @@ import SettingsIcon from "../../../assets/Settings.svg";
 
 const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
 
   const toggleDropdown = () => {
@@ -17,6 +18,8 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
+    setIsLoggingOut(true); // Start logout animation
+
     const token = localStorage.getItem("token");
 
     try {
@@ -27,12 +30,15 @@ const Header = () => {
       });
 
       localStorage.removeItem("token");
-      navigate("/signin");
+
+      // Delay navigation to show animation
+      setTimeout(() => navigate("/signin"), 2000);
     } catch (err) {
       console.error("Logout failed:", err);
-      // Even if API fails, remove token and navigate
       localStorage.removeItem("token");
-      navigate("/signin");
+
+      // Even if logout fails, show animation and navigate
+      setTimeout(() => navigate("/signin"), 2000);
     }
   };
 
@@ -72,6 +78,16 @@ const Header = () => {
           )}
         </div>
       </div>
+
+      {/* Logout Animation Overlay */}
+      {isLoggingOut && (
+        <div className="logout-overlay">
+          <div className="logout-animation">
+            <span className="loading-spinner"></span>
+            <p>Logging out...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
