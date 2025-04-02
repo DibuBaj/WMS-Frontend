@@ -1,0 +1,81 @@
+/* Sidebar Container */
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px 0;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Menu List */
+.sidebar__menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Menu Items */
+.sidebar__menu-item {
+    padding: 8px 20px;
+}
+
+/* Links */
+.sidebar__link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar__link:hover {
+    background-color: #f0f0f0;
+    color: #2e7d32;
+}
+
+/* Active Link */
+.sidebar__link--active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+/* Icons */
+.sidebar__icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    transition: transform 0.2s ease;
+}
+
+.sidebar__link:hover .sidebar__icon {
+    transform: scale(1.1);
+}
+
+/* Text */
+.sidebar__text {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 200px;
+        padding: 15px 0;
+    }
+    
+    .sidebar__menu-item {
+        padding: 6px 15px;
+    }
+    
+    .sidebar__text {
+        font-size: 14px;
+    }
+}
