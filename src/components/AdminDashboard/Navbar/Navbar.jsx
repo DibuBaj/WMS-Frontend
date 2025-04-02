@@ -40,12 +40,12 @@ const Sidebar = () => {
               <span className="text">Collection</span>
             </NavLink>
           </li>
-          {/* <li>
-            <NavLink to="/settings" className={({ isActive }) => (isActive ? "active" : "")}>
-              <img src={Settings} alt="Settings" className="icon" />
-              <span className="text">Settings</span>
+          <li>
+            <NavLink to="/pickupmanagement" className={({ isActive }) => (isActive ? "active" : "")}>
+              <img src={Schedule} alt="All Pickup" className="icon" />
+              <span className="text">All Pickup</span>
             </NavLink>
-          </li> */}
+          </li>
         </ul>
       </div>
   );
