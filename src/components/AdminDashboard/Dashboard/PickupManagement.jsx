@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Search, Leaf, Box, Inbox, LayoutDashboard } from "lucide-react"
 import "./PickupManagement.css"
+import Navbar from "../Navbar/Navbar"
 
 export default function PickupManagement() {
   const [activePage, setActivePage] = useState(1)
@@ -83,37 +84,7 @@ export default function PickupManagement() {
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
-      <div className="sidebar">
-        <div className="logo-container">
-          <div className="logo-circle">
-            <Leaf className="logo-icon" />
-          </div>
-          <h1 className="logo-text">GreenBin</h1>
-        </div>
-
-        <nav className="sidebar-nav">
-          <ul className="nav-list">
-            <li>
-              <button className="nav-button active">
-                <LayoutDashboard className="nav-icon" />
-                Dashboard
-              </button>
-            </li>
-            <li>
-              <button className="nav-button">
-                <Box className="nav-icon" />
-                Collections
-              </button>
-            </li>
-            <li>
-              <button className="nav-button">
-                <Inbox className="nav-icon" />
-                All Pickup
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <Navbar/>
 
       {/* Main Content */}
       <div className="main-content">
