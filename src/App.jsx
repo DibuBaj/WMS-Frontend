@@ -9,8 +9,11 @@ import Collection from "./components/AdminDashboard/Dashboard/Collection";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
+<<<<<<< HEAD
 import Otp from "./pages/Otp.jsx";
 
+=======
+>>>>>>> 4a79a34 (Pickup)
 
 function App() {
   return (
