@@ -1,13 +1,21 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useState } from "react";
 // Removed Leaf, Box imports as they are not in the design
 import { Search } from "lucide-react"; 
 import Header from "../Navbar/Header";
+=======
+import { useState } from "react";
+import { Search, Leaf, Box } from "lucide-react";
+import Header from "../Navbar/Header";
+
+>>>>>>> 7ab7657 (Sneha Branch Fixes)
 import "./PickupManagement.css";
 import Sidebarr from "../Navbar/Sidebarr";
 
 export default function PickupManagement() {
   const [activePage, setActivePage] = useState(1);
+<<<<<<< HEAD
   const itemsPerPage = 7; // Assuming 7 items per page based on design example
   const totalEntries = 24; // From design example
 
@@ -20,6 +28,9 @@ import Navbar from "../Navbar/Navbar"
 
 export default function PickupManagement() {
   const [activePage, setActivePage] = useState(1)
+=======
+
+>>>>>>> 7ab7657 (Sneha Branch Fixes)
 
 >>>>>>> 4a79a34 (Pickup)
   const pickupData = [
@@ -63,6 +74,7 @@ export default function PickupManagement() {
       user: "Ram Shrestha",
       status: "Completed",
     },
+<<<<<<< HEAD
     {
       id: 6,
 <<<<<<< HEAD
@@ -172,6 +184,84 @@ export default function PickupManagement() {
             <div className="pagination-info">
               Showing {showingStart} to {showingEnd} of {totalEntries} entries
             </div>
+=======
+  
+  ];
+
+  const handlePageChange = (pageNumber) => {
+    setActivePage(pageNumber);
+  };
+
+  const handlePrevious = () => {
+    if (activePage > 1) {
+      setActivePage(activePage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (activePage < 3) {
+      setActivePage(activePage + 1);
+    }
+  };
+
+  return (
+    <div>
+      <Header/>
+    <div className="pickup-container">
+      <Sidebarr />
+      
+      <div className="pickup-content">
+        <div className="pickup-search-container">
+          <div className="search-wrapper">
+            <Search className="search-icon" />
+            <input 
+              type="text" 
+              placeholder="Search pickups..." 
+              className="search-input"
+            />
+          </div>
+        </div>
+
+        <div className="pickup-table-container">
+          <table className="pickup-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>User</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pickupData.map((pickup) => (
+                <tr key={pickup.id}>
+                  <td>{pickup.date}</td>
+                  <td>{pickup.location}</td>
+                  <td>
+                    <div className="type-wrapper">
+                      {pickup.type === "Organic" ? (
+                        <Leaf className="type-icon organic" />
+                      ) : (
+                        <Box className="type-icon recyclable" />
+                      )}
+                      {pickup.type}
+                    </div>
+                  </td>
+                  <td>{pickup.user}</td>
+                  <td>
+                    <span className={`status-badge ${pickup.status.toLowerCase()}`}>
+                      {pickup.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="pickup-pagination">
+            <div className="pagination-info">Showing 1 to 7 of {pickupData.length} entries</div>
+>>>>>>> 7ab7657 (Sneha Branch Fixes)
             <div className="pagination-controls">
               <button 
                 className="pagination-btn prev" 
@@ -181,6 +271,7 @@ export default function PickupManagement() {
                 Previous
               </button>
               
+<<<<<<< HEAD
               {pageNumbers.map((page) => (
 =======
       date: "Jan 13, 2025 8:30am",
@@ -285,12 +376,26 @@ export default function PickupManagement() {
                   2
                 </button>
 <<<<<<< HEAD
+=======
+              {[1, 2, 3].map((page) => (
+                <button
+                  key={page}
+                  className={`pagination-btn ${activePage === page ? "active" : ""}`}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </button>
+>>>>>>> 7ab7657 (Sneha Branch Fixes)
               ))}
               
               <button 
                 className="pagination-btn next" 
                 onClick={handleNext} 
+<<<<<<< HEAD
                 disabled={activePage === totalPages}
+=======
+                disabled={activePage === 3}
+>>>>>>> 7ab7657 (Sneha Branch Fixes)
               >
                 Next
               </button>
@@ -299,6 +404,7 @@ export default function PickupManagement() {
         </div>
       </div>
     </div>
+<<<<<<< HEAD
   ); // Ensure this parenthesis closes the return statement
 =======
 
@@ -322,3 +428,8 @@ export default function PickupManagement() {
 >>>>>>> 4a79a34 (Pickup)
 }
 
+=======
+    </div>
+  );
+}
+>>>>>>> 7ab7657 (Sneha Branch Fixes)
