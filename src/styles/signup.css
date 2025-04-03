@@ -26,25 +26,29 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: -50px;
+  margin-top: 65px;
 }
 
 .logoo-wrapperr {
-  display: flex;
+  display: flex ;
   justify-content: center;
   margin-bottom: 20px;
+  position: absolute;
+  top: -68px;
+  z-index: 999;
 }
 
-.logo-img {
+/* .logo-img {
   height: 80px;
   width: auto;
-}
+} */
 
 .formm-boxx {
   background: #ACD88C85;
   padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.2);
   margin-top: -10px;
@@ -73,18 +77,21 @@
 }
 .inputt-groupp {
   position: relative;
+  width: 100%;
   margin-bottom: 20px;
 }
 
 .input {
   width: 100%;
+  box-sizing: border-box; /* Ensures padding and border are included in width */
   padding: 14px 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 18px;
   background: rgba(255, 255, 255, 0.8);
   transition: all 0.3s ease;
 }
+
 
 .input:focus {
   outline: none;
@@ -103,12 +110,12 @@
   top: 50%;
   left: 14px;
   transform: translateY(-50%);
-  font-size: 14px;
+  font-size: 18px;
   color: #395849;
   transition: all 0.3s ease;
   pointer-events: none;
   background-color: transparent;
-  padding: 0 5px;
+  padding: 5px;
   font-weight: bold;
 }
 .input-label.focused {
@@ -117,10 +124,13 @@
   font-size: 12px;
   color: #2e7d32;
   transform: translateY(-50%);
-  padding: 0 5px;
+  padding: 5px;
   font-weight: bolder;
-  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, 0.8); 
+  backdrop-filter: blur(5px); 
+  border-radius: 10px;
 }
+
 
 .input:focus + .input-label,
 .input:not(:placeholder-shown) + .input-label {
@@ -210,9 +220,9 @@
     width: calc(100% - 40px);
   }
   
-  .logo-img {
+  /* .logo-img {
     height: 70px;
-  }
+  } */
   
   .title {
     font-size: 20px;
