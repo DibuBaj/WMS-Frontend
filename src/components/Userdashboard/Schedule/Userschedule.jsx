@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./Userschedule.css";
+import SuccessPopup from "../Navbar/SuccessPopup";
+import ErrorPopup from "../Navbar/ErrorPopup";
 
 const Userschedule = () => {
   const [data, setData] = useState([]);
   const [menuOpen, setMenuOpen] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [editData, setEditData] = useState({});
-  const [popupMessage, setPopupMessage] = useState("");
   const [search, setSearch] = useState("");
   const [filterType, setFilterType] = useState("All");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   // Get the token from localStorage
   const token = localStorage.getItem('token'); 
@@ -22,13 +25,12 @@ const Userschedule = () => {
         const response = await fetch("http://localhost:3000/api/pickups/history", {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,  // Send token in the header
+            'Authorization': `Bearer ${token}`,
           },
         });
         const result = await response.json();
         
         if (result.message === "Pickup history retrieved successfully for user") {
-          // Transform the API data into the required format
           const transformedData = result.pickups.map((pickup) => ({
             id: pickup._id,
             date: new Date(pickup.pickupDateTime).toLocaleString(),
@@ -39,12 +41,12 @@ const Userschedule = () => {
           }));
           setData(transformedData);
         } else {
-          setError("Failed to load pickup history.");
+          showError("Failed to load pickup history.");
         }
       } catch (err) {
-        setError("An error occurred while fetching the data.");
+        showError("An error occurred while fetching the data.");
       } finally {
-        setLoading(false);  // Stop the loading spinner
+        setLoading(false);
       }
     };
 
@@ -60,34 +62,35 @@ const Userschedule = () => {
 
   const handleSaveEdit = () => {
     if (!editData.date || !editData.location || !editData.type || !editData.amount) {
-      setError("All fields are required.");
+      showError("All fields are required.");
       return;
     }
     setData(data.map((item) => (item.id === editItem ? editData : item)));
     setEditItem(null);
-    setError("");
-    showPopup("Edited Successfully!");
+    showSuccess("Edited Successfully!");
     document.body.classList.remove("blur-active");
   };
 
-  const handleCancel = (id) => {
+  const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
     setMenuOpen(null);
-    showPopup("Deleted Successfully!");
+    showSuccess("Deleted Successfully!");
   };
 
-  const showPopup = (message) => {
+  const showSuccess = (message) => {
     setPopupMessage(message);
-    document.body.classList.add("blur-active");
-    setTimeout(() => {
-      setPopupMessage("");
-      document.body.classList.remove("blur-active");
-    }, 2000);
+    setShowSuccessPopup(true);
+    setTimeout(() => setShowSuccessPopup(false), 2000);
+  };
+
+  const showError = (message) => {
+    setPopupMessage(message);
+    setShowErrorPopup(true);
+    setTimeout(() => setShowErrorPopup(false), 2000);
   };
 
   const closeEditPopup = () => {
     setEditItem(null);
-    setError("");
     document.body.classList.remove("blur-active");
   };
 
@@ -103,13 +106,12 @@ const Userschedule = () => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Display loading text while data is being fetched
+    return <div>Loading...</div>;
   }
 
   return (
-    <div className={`container ${editItem !== null || popupMessage ? "blur-background" : ""}`}>
+    <div className={`container ${editItem !== null ? "blur-background" : ""}`}>
       <h2 className="title">Waste Collection Schedule</h2>
-      {popupMessage && <div className="popup-message">{popupMessage}</div>}
 
       <div className="controls">
         <input
@@ -125,8 +127,6 @@ const Userschedule = () => {
           <option value="Recyclable">Recyclable</option>
         </select>
       </div>
-
-      {error && <div className="error-message">{error}</div>}
 
       <table className="data-table">
         <thead>
@@ -151,7 +151,7 @@ const Userschedule = () => {
                 {menuOpen === row.id && (
                   <div className="dropdown-menu">
                     <button onClick={() => handleEdit(row)}>Edit</button>
-                    <button onClick={() => handleCancel(row.id)}>Delete</button>
+                    <button onClick={() => handleDelete(row.id)}>Delete</button>
                   </div>
                 )}
               </td>
@@ -165,7 +165,6 @@ const Userschedule = () => {
       {editItem !== null && (
         <div className="edit-popup">
           <h3>Edit Entry</h3>
-          {error && <p className="error-message">{error}</p>}
           <input type="text" value={editData.date} onChange={(e) => setEditData({ ...editData, date: e.target.value })} />
           <input type="text" value={editData.location} onChange={(e) => setEditData({ ...editData, location: e.target.value })} />
           <input type="text" value={editData.type} onChange={(e) => setEditData({ ...editData, type: e.target.value })} />
@@ -173,6 +172,20 @@ const Userschedule = () => {
           <button onClick={handleSaveEdit}>Save</button>
           <button onClick={closeEditPopup}>Close</button>
         </div>
+      )}
+
+      {showSuccessPopup && (
+        <SuccessPopup
+          message={popupMessage}
+          onClose={() => setShowSuccessPopup(false)}
+        />
+      )}
+
+      {showErrorPopup && (
+        <ErrorPopup
+          message={popupMessage}
+          onClose={() => setShowErrorPopup(false)}
+        />
       )}
     </div>
   );

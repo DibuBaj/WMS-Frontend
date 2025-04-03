@@ -1,7 +1,5 @@
-/* Container Styling */
 .container {
   padding: 20px;
-  /* max-width: 1200px; */
   margin: auto;
   background: rgb(250, 250, 250);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -11,7 +9,6 @@
   transition: filter 0.3s ease;
 }
 
-/* Title */
 .title {
   font-size: 22px;
   font-weight: bold;
@@ -19,7 +16,6 @@
   color: #333;
 }
 
-/* Search and Filter Controls */
 .controls {
   display: flex;
   gap: 10px;
@@ -34,7 +30,6 @@
   font-size: 14px;
 }
 
-/* Table Styling */
 .data-table {
   width: 100%;
   border-collapse: collapse;
@@ -62,7 +57,7 @@
   transition: 0.3s;
 }
 
-/* Type Badge */
+
 .type-badge {
   padding: 6px 12px;
   background: #e0e0e0;
@@ -81,7 +76,7 @@
   font-weight: bold;
 }
 
-/* Three-dot menu button */
+
 .menu-btn {
   background: none;
   border: none;
@@ -89,7 +84,7 @@
   font-size: 18px;
 }
 
-/* Dropdown menu for Edit & Cancel */
+
 .dropdown-menu {
   position: absolute;
   right: 0;
@@ -115,7 +110,6 @@
   background: #f0f0f0;
 }
 
-/* Edit Popup */
 .edit-popup {
   position: fixed;
   top: 50%;
@@ -143,7 +137,6 @@
   border-radius: 4px;
 }
 
-/* Highlight Empty Fields */
 .edit-popup input:invalid,
 .edit-popup select:invalid {
   border-color: red;
@@ -167,7 +160,6 @@
   color: white;
 }
 
-/* Success Message Popup */
 .success-popup {
   position: fixed;
   top: 10px;
@@ -183,7 +175,7 @@
   text-align: center;
 }
 
-/* Pagination */
+
 .pagination {
   display: flex;
   justify-content: center;
@@ -223,7 +215,6 @@
   cursor: not-allowed;
 }
 
-/* User Schedule Layout */
 .user-schedule {
   display: flex;
   gap: 20px;
@@ -242,7 +233,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  /* width: 88%; */
+ 
 }
 
 .status-text {
@@ -257,4 +248,9 @@
   background: none;
   border: none;
   cursor: pointer;
-}
+} 
+
+
+
+
+

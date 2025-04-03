@@ -4,7 +4,6 @@ import axios from "axios";
 import "./Sidebar.css";
 
 import Logo from "../../../assets/Logo.svg";
-import Adminlogo from "../../../assets/Adminlogo.svg"; 
 import logout from "../../../assets/logout.png";
 import SettingsIcon from "../../../assets/Settings.svg"; 
 
@@ -12,6 +11,7 @@ const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
+  const [avatar, setAvatar] = useState(localStorage.getItem("avatar") || "../../../assets/Adminlogo.svg"); // Get avatar from localStorage
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -62,7 +62,7 @@ const Header = () => {
         <span className="GreenBinText">GreenBin</span>
 
         <div className="profile-container" onClick={toggleDropdown}>
-          <img src={Adminlogo} alt="Profile" className="profile-icon" />
+          <img src={avatar} alt="Profile" className="profile-icon" /> {/* Display avatar from localStorage */}
 
           {showDropdown && (
             <div className="dropdown-menu">
@@ -79,7 +79,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Logout Animation Overlay */}
       {isLoggingOut && (
         <div className="logout-overlay">
           <div className="logout-animation">
@@ -93,3 +92,8 @@ const Header = () => {
 };
 
 export default Header;
+
+
+
+
+
