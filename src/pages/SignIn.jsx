@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import SuccessPopup from "../components/Userdashboard/Navbar/SuccessPopup"; // Correct path
-import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup"; // Add ErrorPopup
+import SuccessPopup from "../components/Userdashboard/Navbar/SuccessPopup"; 
+import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup"; 
 import "../styles/signin.css";
 import Logo from "../assets/Logo.svg";
 import Background from "../assets/Background.png";
@@ -37,23 +37,18 @@ const SignIn = () => {
         password: formData.password,
       });
 
-      // Store token and user data
       localStorage.setItem("token", response.data.token);
       if (response.data.user) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
       }
 
-      // Show success popup
       setPopupMessage("Login successful! Redirecting...");
       setShowSuccessPopup(true);
 
-      // Redirect after a short delay
       setTimeout(() => {
         navigate("/userdashboard");
       }, 1500);
-
     } catch (err) {
-      // Show error popup
       setPopupMessage(err.response?.data?.message || "Invalid credentials");
       setShowErrorPopup(true);
     } finally {
@@ -90,7 +85,6 @@ const SignIn = () => {
         ) : (
           <form onSubmit={handleSubmit} className="form">
             <div className="input-group">
-              <label htmlFor="email" className="label">Email</label>
               <input
                 type="email"
                 name="email"
@@ -100,12 +94,11 @@ const SignIn = () => {
                 onChange={handleChange}
                 className="input"
                 required
-                autoComplete="username"
               />
+              <label htmlFor="email" className="label">Email</label>
             </div>
 
             <div className="input-group">
-              <label htmlFor="password" className="label">Password</label>
               <input
                 type="password"
                 name="password"
@@ -115,8 +108,8 @@ const SignIn = () => {
                 onChange={handleChange}
                 className="input"
                 required
-                autoComplete="current-password"
               />
+              <label htmlFor="password" className="label">Password</label>
             </div>
 
             <div className="options-container">
@@ -134,11 +127,7 @@ const SignIn = () => {
               <a href="/forgot-password" className="forgot-password">Forgot password?</a>
             </div>
 
-            <button 
-              type="submit" 
-              className="submit-btn"
-              disabled={loading}
-            >
+            <button type="submit" className="submit-btn" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
@@ -149,26 +138,15 @@ const SignIn = () => {
         </p>
       </div>
 
-      {/* Popup Components */}
       {showSuccessPopup && (
-        <SuccessPopup 
-          message={popupMessage} 
-          onClose={() => setShowSuccessPopup(false)} 
-        />
+        <SuccessPopup message={popupMessage} onClose={() => setShowSuccessPopup(false)} />
       )}
       
       {showErrorPopup && (
-        <ErrorPopup 
-          message={popupMessage} 
-          onClose={() => setShowErrorPopup(false)} 
-        />
+        <ErrorPopup message={popupMessage} onClose={() => setShowErrorPopup(false)} />
       )}
     </div>
   );
 };
 
 export default SignIn;
-
-
-
-
