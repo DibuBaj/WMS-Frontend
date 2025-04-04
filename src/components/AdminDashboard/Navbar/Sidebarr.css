@@ -1,7 +1,8 @@
-/* 
+
 .sidebarr {
     width: 200px;
-    height: calc(100vh - 50px);
+    /* height: calc(100vh - 50px); */
+    height: 91vh;
     background-color: #fff;
     padding-top: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -94,7 +95,7 @@
     .sidebar__text {
         font-size: 14px;
     }
-} */
+}
 
 
 .top-navbar {
@@ -120,7 +121,7 @@
   
   .sidebar {
     width: 200px; 
-    height: calc(100vh - 50px);
+    /* height: calc(100vh - 50px); */
     background-color: #fff;
     padding-top: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
