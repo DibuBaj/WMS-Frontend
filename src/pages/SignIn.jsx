@@ -60,11 +60,15 @@ const SignIn = () => {
 
       
       setTimeout(() => {
+<<<<<<< HEAD
         if (formData.email === ADMIN_EMAIL) {
           navigate("/admindashboard");
         } else {
           navigate("/userdashboard");
         }
+=======
+        navigate("/userdashboard");
+>>>>>>> caf6b3c (Issue in pickup)
       }, 2000);
     } catch (err) {
       setPopupMessage(err.response?.data?.message || "Invalid credentials");

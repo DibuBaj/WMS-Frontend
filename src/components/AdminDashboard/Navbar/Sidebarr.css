@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 
+=======
+/* 
+>>>>>>> caf6b3c (Issue in pickup)
 .sidebarr {
     width: 200px;
     /* height: calc(100vh - 50px); */
@@ -95,7 +99,11 @@
     .sidebar__text {
         font-size: 14px;
     }
+<<<<<<< HEAD
 }
+=======
+} */
+>>>>>>> caf6b3c (Issue in pickup)
 
 
 .top-navbar {
@@ -105,7 +113,10 @@
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     transition: width 0.3s ease; 
     background-color: #fff;
+<<<<<<< HEAD
     padding:8px;
+=======
+>>>>>>> caf6b3c (Issue in pickup)
   }
   .GreenBinText {
     font-size: 20px;
@@ -122,7 +133,11 @@
   
   .sidebar {
     width: 200px; 
+<<<<<<< HEAD
     /* height: calc(100vh - 50px); */
+=======
+    height: calc(100vh - 50px);
+>>>>>>> caf6b3c (Issue in pickup)
     background-color: #fff;
     padding-top: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -176,9 +191,15 @@
   }
   
   .profile-container {
+<<<<<<< HEAD
     /* position: absolute;
     top: 10px; 
     right: 5px;  */
+=======
+    position: absolute;
+    top: 10px; 
+    right: 5px; 
+>>>>>>> caf6b3c (Issue in pickup)
     cursor: pointer;
   }
   
