@@ -47,7 +47,7 @@ const SignIn = () => {
 
       setTimeout(() => {
         navigate("/userdashboard");
-      }, 1500);
+      }, 2000);
     } catch (err) {
       setPopupMessage(err.response?.data?.message || "Invalid credentials");
       setShowErrorPopup(true);

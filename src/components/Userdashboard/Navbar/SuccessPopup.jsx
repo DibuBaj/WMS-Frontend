@@ -7,13 +7,13 @@ const SuccessPopup = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleClose();
-    }, 5000);
+    }, 2000);
     return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => onClose(), 300);
+    setTimeout(() => onClose(), 5000);
   };
 
   return (
