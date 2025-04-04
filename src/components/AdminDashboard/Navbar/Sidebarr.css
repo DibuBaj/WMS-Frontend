@@ -2,7 +2,7 @@
 .sidebarr {
     width: 200px;
     /* height: calc(100vh - 50px); */
-    height: 91vh;
+    height: 90vh;
     background-color: #fff;
     padding-top: 20px;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
@@ -105,6 +105,7 @@
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     transition: width 0.3s ease; 
     background-color: #fff;
+    padding:8px;
   }
   .GreenBinText {
     font-size: 20px;
@@ -175,9 +176,9 @@
   }
   
   .profile-container {
-    position: absolute;
+    /* position: absolute;
     top: 10px; 
-    right: 5px; 
+    right: 5px;  */
     cursor: pointer;
   }
   
