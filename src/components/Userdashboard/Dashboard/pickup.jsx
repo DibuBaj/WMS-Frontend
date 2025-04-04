@@ -145,7 +145,6 @@ const Pickup = ({ addPickup }) => {
             <option value="Organic">Organic</option>
             <option value="Recyclable">Recyclable</option>
             <option value="Non-Recyclable">Non-Recyclable</option>
-            <option value="All">All</option>
           </select>
         </div>
 

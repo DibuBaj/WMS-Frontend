@@ -37,7 +37,7 @@ const Userdashboard = () => {
           const transformedData = result.pickups
             .map((pickup) => ({
               date: new Date(pickup.pickupDateTime).toLocaleString(),
-              location: `${pickup.pickupLocation.coordinates[0]}, ${pickup.pickupLocation.coordinates[1]}`,
+              address: pickup.address, // Address from the API response
               type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
               amount: `${pickup.amount} ${pickup.unit}`,
               status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
@@ -86,7 +86,7 @@ const Userdashboard = () => {
           const transformedData = result.pickups
             .map((pickup) => ({
               date: new Date(pickup.pickupDateTime).toLocaleString(),
-              location: `${pickup.pickupLocation.coordinates[0]}, ${pickup.pickupLocation.coordinates[1]}`,
+              address: pickup.address, // Address from the API response
               type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
               amount: `${pickup.amount} ${pickup.unit}`,
               status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
@@ -94,9 +94,10 @@ const Userdashboard = () => {
             }))
             .slice(0, 5); // Take only the first 5 pickups
 
-          // Merge the newly added pickup with the fetched data and update state
+          // Merge the newly added pickup with the fetched data, filter out empty/invalid pickups
           setRecentPickups((prev) => {
-            const newData = [updatedPickup, ...transformedData];
+            const validUpdatedPickup = updatedPickup && updatedPickup.date && updatedPickup.address; // Check if pickup is valid
+            const newData = validUpdatedPickup ? [updatedPickup, ...transformedData] : [...transformedData];
             return newData.slice(0, 5); // Always limit to 5 most recent pickups
           });
         }
@@ -121,8 +122,7 @@ const Userdashboard = () => {
         <Sidebar />
         <div className={`dashboard-wrapper ${showPopup ? "blurred" : ""}`}>
           <Pickup addPickup={addPickup} />
-          {/* Conditionally render Recentpickup only if there are recent pickups */}
-          {recentPickups.length > 0 && <Recentpickup recentPickups={recentPickups} />}
+          <Recentpickup recentPickups={recentPickups} />
         </div>
       </div>
 
@@ -147,4 +147,3 @@ const Userdashboard = () => {
 };
 
 export default Userdashboard;
-

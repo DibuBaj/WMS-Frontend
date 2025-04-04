@@ -35,7 +35,7 @@ const Userschedule = () => {
           const transformedData = result.pickups.map((pickup) => ({
             id: pickup._id,
             date: new Date(pickup.pickupDateTime).toLocaleString(),
-            location: `${pickup.pickupLocation.coordinates[0]}, ${pickup.pickupLocation.coordinates[1]}`,
+            location: pickup.address, // Directly use address from the response
             type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
             amount: `${pickup.amount} ${pickup.unit}`,
             status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
