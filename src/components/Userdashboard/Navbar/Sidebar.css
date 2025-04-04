@@ -199,7 +199,8 @@
 
 .logo-wrap{
   display: flex;
-      align-items: center;
+  align-items: center;
+  gap:10px;
 }
 
 .GreenBinText {
