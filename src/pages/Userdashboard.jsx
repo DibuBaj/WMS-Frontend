@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../components/Userdashboard/Navbar/Sidebar.jsx";
-import Pickup from "../components/Userdashboard/Dashboard/Pickup.jsx";
+import Pickup from "../components/Userdashboard/Dashboard/pickup.jsx";
 import Recentpickup from "../components/Userdashboard/Dashboard/Recentpickup.jsx";
 import Header from "../components/Userdashboard/Navbar/Header.jsx";
 import "../components/Userdashboard/Dashboard/Dashboard.css";
@@ -10,21 +10,50 @@ import Imepay from "../assets/Imepay.jpg";
 import SuccessPopup from "../components/Userdashboard/Navbar/SuccessPopup";
 import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
 
-
-
 const Userdashboard = () => {
-  const [recentPickups, setRecentPickups] = useState([
-    { date: "Jan 15, 2025 5:30am", location: "Newroad", type: "Organic", amount: "50 kg", status: "Pending", payment: "" },
-    { date: "Jan 14, 2025 6:30am", location: "Newroad", type: "Recyclable", amount: "30 kg", status: "Completed", payment: "" },
-    { date: "Jan 13, 2025 8:30am", location: "Newroad", type: "Organic", amount: "25 kg", status: "Completed", payment: "" },
-  ]);
-
+  const [recentPickups, setRecentPickups] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  const [selectedPayment, setSelectedPayment] = useState("");
   const [currentPickup, setCurrentPickup] = useState(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState(false);
+
+  const token = localStorage.getItem("token");
+
+  // Fetch recent pickups on mount
+  useEffect(() => {
+    const fetchRecentPickups = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/pickups/history", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await response.json();
+
+        if (result.message === "Pickup history retrieved successfully for user") {
+          const transformedData = result.pickups
+            .map((pickup) => ({
+              date: new Date(pickup.pickupDateTime).toLocaleString(),
+              location: `${pickup.pickupLocation.coordinates[0]}, ${pickup.pickupLocation.coordinates[1]}`,
+              type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
+              amount: `${pickup.amount} ${pickup.unit}`,
+              status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
+              payment: "", // Placeholder, since it's not in the API
+            }))
+            .slice(0, 5); // Take only the first 5 pickups
+
+          setRecentPickups(transformedData);
+        }
+      } catch (err) {
+        console.error("Error fetching recent pickups:", err);
+      }
+    };
+
+    fetchRecentPickups();
+  }, [token]);
 
   const addPickup = (newPickup) => {
     setCurrentPickup(newPickup);
@@ -34,44 +63,69 @@ const Userdashboard = () => {
     setShowPopup(true);
   };
 
-  const handlePaymentSelection = (paymentMethod) => {
+  const handlePaymentSelection = async (paymentMethod) => {
     if (currentPickup) {
+      // Update the current pickup with payment method
       const updatedPickup = { ...currentPickup, payment: paymentMethod };
-      setRecentPickups(prev => [updatedPickup, ...prev]);
+
+      // Hide the payment popup
       setShowPopup(false);
 
-      // Simulate payment processing
-      if (paymentMethod) {
-        // If paymentMethod is valid, show success popup
-        setPaymentSuccess(true);
-        setPaymentError(false);
+      try {
+        // Re-fetch the data from the API to reflect the latest pickup list
+        const response = await fetch("http://localhost:3000/api/pickups/history", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        
-        setTimeout(() => {
-          setPaymentSuccess(false);
-        }, 3000);
-      } else {
-       
+        const result = await response.json();
+
+        if (result.message === "Pickup history retrieved successfully for user") {
+          const transformedData = result.pickups
+            .map((pickup) => ({
+              date: new Date(pickup.pickupDateTime).toLocaleString(),
+              location: `${pickup.pickupLocation.coordinates[0]}, ${pickup.pickupLocation.coordinates[1]}`,
+              type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
+              amount: `${pickup.amount} ${pickup.unit}`,
+              status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
+              payment: "", // Placeholder, since it's not in the API
+            }))
+            .slice(0, 5); // Take only the first 5 pickups
+
+          // Merge the newly added pickup with the fetched data and update state
+          setRecentPickups((prev) => {
+            const newData = [updatedPickup, ...transformedData];
+            return newData.slice(0, 5); // Always limit to 5 most recent pickups
+          });
+        }
+      } catch (err) {
+        console.error("Error updating pickups:", err);
         setPaymentError(true);
-        setPaymentSuccess(false);
+        setTimeout(() => setPaymentError(false), 3000);
+      }
 
-        setTimeout(() => {
-          setPaymentError(false);
-        }, 3000);
+      // Show success message if payment method is selected successfully
+      if (paymentMethod) {
+        setPaymentSuccess(true);
+        setTimeout(() => setPaymentSuccess(false), 3000);
       }
     }
   };
+
   return (
     <>
       <Header />
       <div className="user-dashboard">
         <Sidebar />
-        <div className={`dashboard-wrapper ${showPopup ? "blurred" : ""}`}> 
+        <div className={`dashboard-wrapper ${showPopup ? "blurred" : ""}`}>
           <Pickup addPickup={addPickup} />
-          <Recentpickup recentPickups={recentPickups} />
+          {/* Conditionally render Recentpickup only if there are recent pickups */}
+          {recentPickups.length > 0 && <Recentpickup recentPickups={recentPickups} />}
         </div>
       </div>
-      
+
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-message">
@@ -86,7 +140,6 @@ const Userdashboard = () => {
         </div>
       )}
 
-      {/* Conditionally render SuccessPopup or ErrorPopup based on the payment status */}
       {paymentSuccess && <SuccessPopup message="Payment successful! Your pickup has been processed." />}
       {paymentError && <ErrorPopup message="Payment failed. Please try again." />}
     </>
