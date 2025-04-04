@@ -25,7 +25,7 @@ const Recentpickup = ({ recentPickups }) => {
                 {/* <td>{pickup.route}</td> */}
                 <td>{pickup.type}</td>
                 <td>{pickup.amount}</td>
-                <td className={pickup.status === "Pending" ? "status-pending" : "status-completed"}>
+                <td className={pickup.status === "Pending" ? "status-pending status-td" : "status-completed status-td"}>
                   {pickup.status}
                 </td>
               </tr>
