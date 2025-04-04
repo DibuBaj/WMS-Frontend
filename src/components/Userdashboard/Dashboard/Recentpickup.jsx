@@ -10,7 +10,7 @@ const Recentpickup = ({ recentPickups }) => {
           <thead>
             <tr>
               <th>Date</th>
-              <th>Location</th>
+              <th>Address</th>
               <th>Type</th>
               <th>Amount</th>
               <th>Status</th>
@@ -20,7 +20,7 @@ const Recentpickup = ({ recentPickups }) => {
             {recentPickups.map((pickup, index) => (
               <tr key={index}>
                 <td>{pickup.date}</td>
-                <td>{pickup.location}</td>
+                <td>{pickup.address}</td> {/* Changed from location to address */}
                 <td>{pickup.type}</td>
                 <td>{pickup.amount}</td>
                 <td className={pickup.status === "Pending" ? "status-pending status-td" : "status-completed status-td"}>
