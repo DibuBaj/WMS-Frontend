@@ -9,9 +9,10 @@ const Header = () => {
   return (
     <div className="header">
           <div className="top-navbar">
+            <div className='logo-wrap'>
             <img src={Logo} alt="GreenBin Logo" className="sidebar-logo" />
             <span className="GreenBinText">GreenBin</span>
-    
+            </div>
             <div className="profile-container">
               <img src={Adminlogo} alt="Profile" className="profile-icon" />
             </div>

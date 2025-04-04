@@ -50,3 +50,11 @@
     color: #10b981;
     background: #FFFFFF; 
 }
+
+.status-td{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 2px !important;
+    margin-top: 10px !important;
+}

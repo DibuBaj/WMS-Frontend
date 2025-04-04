@@ -48,7 +48,7 @@ const Pickup = ({ addPickup }) => {
       address,
       pickupDateTime: new Date(dateTime).toISOString(),
       subscription,
-      wasteType: wasteType.toLowerCase(), // match schema: 'organic', 'recyclable', etc.
+      wasteType: wasteType.toLowerCase(), 
       amount: Number(amount),
       unit
     };

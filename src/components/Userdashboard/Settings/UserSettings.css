@@ -7,7 +7,7 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 1rem;
-    background-color: grey;
+    /* background-color: grey; */
     border-radius: 10px;
     height: 700px;
 }
@@ -186,7 +186,7 @@
 .settings-page {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    /* min-height: 100vh; */
 }
 
 .settings-layout {
