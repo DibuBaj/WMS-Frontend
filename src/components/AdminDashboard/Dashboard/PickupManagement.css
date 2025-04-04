@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* Main Layout - Inherit from parent or define if needed */
 .pickup-container {
   display: flex;
@@ -54,35 +55,70 @@
   margin-top: 3px; /* Adjust this value as needed */
 =======
 /* Main Layout */
+=======
+/* Main Layout - Inherit from parent or define if needed */
+>>>>>>> da5f14c (updated the codes)
 .pickup-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f5f5f5;
-  font-family: 'Arial', sans-serif;
-  position: relative;
+  background-color: #f9f9f9; /* Match AdminDashboard background */
+  font-family: 'Arial', sans-serif; /* Or match Figma font */
 }
 
+/* Content Area - Apply card styling */
 .pickup-content {
-  margin-left: 10px;
-  margin-top: 40px;
-  padding: 30px;
-  width: calc(100% - 250px);
-  min-height: calc(100vh - 60px);
+  /* Adjust margin-left based on actual Sidebarr width */
+  margin-left: 10px; 
+  margin-top: 30px; /* Consistent margin */
+  margin-right: 30px; /* Add margin to the right */
+  margin-bottom: 30px; /* Add margin at the bottom */
+  /* Restore full padding to the card */
+  padding: 25px 30px; 
+  width: calc(100% - 250px - 40px); /* Adjust width based on Sidebarr and margins */
+  background-color: white;
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07); /* Subtle shadow */
+  display: flex;
+  flex-direction: column;
 }
 
-/* Search Container */
-.pickup-search-container {
-  margin-bottom: 30px;
+/* Pickup Header: Title and Search */
+.pickup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Use center alignment for vertical centering */
+  /* Remove padding-top, it's handled by parent */
+  padding-top: 0; 
+  /* Remove padding-bottom and border */
+  padding-bottom: 0; 
+  border-bottom: none; 
+  /* Control all space after header with margin */
+  margin-bottom: 30px; /* Adjust as needed */
 }
 
+.pickup-title {
+  margin: 0;
+  font-size: 20px; /* Larger title */
+  font-weight: 600;
+  color: #333;
+}
+
+/* Search Wrapper */
 .search-wrapper {
   position: relative;
+<<<<<<< HEAD
   max-width: 400px;
 >>>>>>> 7ab7657 (Sneha Branch Fixes)
+=======
+  max-width: 200px; /* Adjust width as needed */
+  /* Add small top margin to nudge down */
+  margin-top: 3px; /* Adjust this value as needed */
+>>>>>>> da5f14c (updated the codes)
 }
 
 .search-icon {
   position: absolute;
+<<<<<<< HEAD
 <<<<<<< HEAD
   left: 2px; 
   top: 46%;
@@ -95,15 +131,26 @@
   transform: translateY(-50%);
   color: #666;
 >>>>>>> 7ab7657 (Sneha Branch Fixes)
+=======
+  left: 2px; 
+  top: 46%;
+  transform: translateY(-50%);
+  color: #ccc; /* Even lighter icon */
+  pointer-events: none; 
+>>>>>>> da5f14c (updated the codes)
 }
 
 .search-input {
   width: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> da5f14c (updated the codes)
   padding: 9px 5px 9px 20px; /* Slightly increased vertical padding */
   border: 1px solid #eee; /* Even lighter border */
   border-radius: 8px; 
   font-size: 14px;
+<<<<<<< HEAD
   outline: none;
   background-color: #fff; /* White background */
 }
@@ -188,95 +235,98 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 16px;
+=======
+>>>>>>> da5f14c (updated the codes)
   outline: none;
+  background-color: #fff; /* White background */
+}
+.search-input::placeholder {
+  color: #ccc; /* Lighter placeholder */
+}
+.search-input:focus {
+  border-color: #ddd; /* Slightly darker border on focus */
+  box-shadow: none; /* Remove focus shadow */
 }
 
-.search-input:focus {
-  border-color: #2e7d32;
-  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
-}
 
 /* Table Container */
 .pickup-table-container {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  flex-grow: 1; /* Allow table to take available space */
+  /* Remove padding-top; space is now handled by header's margin-bottom */
 }
 
-.pickup-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.pickup-table th {
-  background-color: #f7f7f7;
-  padding: 15px 20px;
-  text-align: left;
-  font-weight: 600;
-  color: #444;
-  border-bottom: 1px solid #eee;
-}
-
-.pickup-table td {
-  padding: 15px 20px;
-  border-bottom: 1px solid #eee;
+/* Table Row Styles (using divs) */
+.table-row {
+  display: flex;
+  padding: 14px 0; /* Vertical padding */
+  border-bottom: 1px solid #f0f0f0; /* Lighter border */
+  font-size: 13px;
   color: #555;
+  align-items: center; /* Vertically align content */
 }
-
-.pickup-table tr:last-child td {
+.table-row:last-child {
   border-bottom: none;
 }
 
-.pickup-table tr:hover {
-  background-color: #f9f9f9;
+.table-header {
+  font-weight: 600;
+  color: #333;
+  font-size: 12px;
+  padding-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #eee; /* Thicker header border */
 }
 
-/* Type Styles */
-.type-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+/* Table Cell Styles */
+.table-cell {
+  flex: 1;
+  padding: 0 10px; /* Horizontal padding */
+  text-align: left;
+  white-space: nowrap; /* Prevent wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis if content overflows */
 }
+/* Adjust flex basis for column widths */
+.table-cell:nth-child(1) { flex-basis: 25%; } /* Date */
+.table-cell:nth-child(2) { flex-basis: 20%; } /* Location */
+.table-cell:nth-child(3) { flex-basis: 15%; } /* Type */
+.table-cell:nth-child(4) { flex-basis: 20%; } /* User */
+.table-cell:nth-child(5) { flex-basis: 20%; text-align: center; } /* Status */
 
-.type-icon {
-  width: 18px;
-  height: 18px;
-}
 
-.type-icon.organic {
-  color: #4caf50;
-}
-
-.type-icon.recyclable {
-  color: #2196f3;
-}
-
-/* Status Badges */
+/* Status Badges (reuse from AdminDashboard.css if defined globally, or redefine here) */
 .status-badge {
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 12px; /* Pill shape */
+  font-size: 11px;
   font-weight: 500;
+  text-transform: capitalize;
 }
 
-.status-badge.pending {
-  background-color: #ffebee;
-  color: #f44336;
+.status-pending {
+  background-color: #ffebee; /* Light red */
+  color: #dc3545;
 }
 
-.status-badge.completed {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+.status-completed {
+  background-color: #e8f5e9; /* Light green */
+  color: #198754;
 }
+<<<<<<< HEAD
 >>>>>>> 7ab7657 (Sneha Branch Fixes)
+=======
+/* Add other status styles if needed (e.g., in-progress, scheduled) */
+
+>>>>>>> da5f14c (updated the codes)
 
 /* Pagination */
 .pickup-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
+<<<<<<< HEAD
 <<<<<<< HEAD
   padding-top: 20px; /* Space above pagination */
   margin-top: auto; /* Push pagination to the bottom */
@@ -295,10 +345,21 @@
   color: #666;
   font-size: 14px;
 >>>>>>> 7ab7657 (Sneha Branch Fixes)
+=======
+  padding-top: 20px; /* Space above pagination */
+  margin-top: auto; /* Push pagination to the bottom */
+  border-top: 1px solid #f0f0f0; /* Separator */
+}
+
+.pagination-info {
+  color: #777; /* Lighter text */
+  font-size: 13px;
+>>>>>>> da5f14c (updated the codes)
 }
 
 .pagination-controls {
   display: flex;
+<<<<<<< HEAD
 <<<<<<< HEAD
   gap: 5px; /* Smaller gap between buttons */
 }
@@ -790,54 +851,47 @@
 >>>>>>> 4a79a34 (Pickup)
 =======
   gap: 10px;
+=======
+  gap: 5px; /* Smaller gap between buttons */
+>>>>>>> da5f14c (updated the codes)
 }
 
 .pagination-btn {
-  padding: 8px 16px;
-  border: 1px solid #ddd;
+  padding: 6px 12px; /* Adjust button size */
+  border: 1px solid #e0e0e0; /* Lighter border */
   background-color: white;
-  border-radius: 5px;
+  border-radius: 6px; /* Slightly less rounded */
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
+  font-size: 13px;
+  color: #555;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background-color: #f5f5f5;
+  background-color: #f8f8f8;
+  border-color: #ccc;
 }
 
 .pagination-btn.active {
-  background-color: #2e7d32;
+  background-color: #395849; /* Match theme color */
   color: white;
-  border-color: #2e7d32;
+  border-color: #395849;
+  font-weight: 500;
 }
 
 .pagination-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+  background-color: #f5f5f5;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .pickup-content {
-    margin-left: 0;
-    width: 100%;
-    padding: 20px;
-    margin-top: 60px;
-  }
-  
-  .pickup-table {
-    display: block;
-    overflow-x: auto;
-  }
-  
-  .pickup-pagination {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .pagination-controls {
-    width: 100%;
-    justify-content: center;
-  }
+.pagination-btn.prev,
+.pagination-btn.next {
+  font-weight: 500;
+}
+
+/* Remove old table styles if they exist */
+.pickup-table {
+  display: none; 
 }
 >>>>>>> 7ab7657 (Sneha Branch Fixes)

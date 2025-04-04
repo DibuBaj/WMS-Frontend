@@ -1,7 +1,11 @@
 /* Main Layout */
 .dashboard-container {
   display: flex;
+<<<<<<< HEAD
   /* min-height: 100vh; */
+=======
+  min-height: 100vh;
+>>>>>>> da5f14c (updated the codes)
   background-color: #f9f9f9; /* Lighter background like design */
   font-family: 'Arial', sans-serif; /* Or match Figma font */
 }
