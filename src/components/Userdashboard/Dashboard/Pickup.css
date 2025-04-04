@@ -69,9 +69,10 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+  
 }
 
-.form-label {
+.form-group .form-label {
   font-weight: bold;
   color: #395849;
   margin-bottom: 2px;
