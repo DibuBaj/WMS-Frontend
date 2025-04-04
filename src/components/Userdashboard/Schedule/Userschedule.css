@@ -1,4 +1,4 @@
-.container {
+ .container {
   padding: 20px;
   margin: auto;
   background: rgb(250, 250, 250);
@@ -237,7 +237,6 @@
 
 
 
-/* Overlay for the Edit Popup */
 .overlay {
   position: fixed;
   top: 0;
@@ -246,17 +245,16 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
   z-index: 100;
-  display: none; /* Initially hidden */
+  display: none; 
   transition: opacity 0.3s ease;
 }
 
-/* Display overlay when edit popup is active */
+
 .edit-popup.active + .overlay {
   display: block;
   opacity: 1;
 }
 
-/* Edit Popup container */
 .edit-popup {
   position: fixed;
   top: 50%;
@@ -268,17 +266,17 @@
   z-index: 200;
   border-radius: 8px;
   width: 300px;
-  display: none; /* Initially hidden */
+  display: none; 
   transition: opacity 0.3s ease;
 }
 
-/* Show edit popup when active */
+
 .edit-popup.active {
   display: block;
   opacity: 1;
 }
 
-/* Inputs and selects inside edit popup */
+
 .edit-popup input,
 .edit-popup select {
   display: block;
@@ -290,7 +288,7 @@
   font-size: 14px;
 }
 
-/* Button styles for Save and Close */
+
 .edit-popup button {
   margin-right: 5px;
   padding: 8px 12px;
@@ -309,7 +307,7 @@
   color: white;
 }
 
-/* Amount input box and unit dropdown styling */
+
 .amount-input {
   display: flex;
   justify-content: space-between;
@@ -323,7 +321,7 @@
   flex: 1;
 }
 
-/* Table and menu styles */
+
 .menu-btn {
   background: none;
   border: none;
@@ -357,7 +355,8 @@
   background: #f0f0f0;
 }
 
-/* Prevent scrolling when the popup is open */
 body.blur-active {
   overflow: hidden;
-}
+} 
+
+
