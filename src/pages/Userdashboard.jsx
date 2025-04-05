@@ -9,6 +9,7 @@ import Khalti from "../assets/Khalti.png";
 import Imepay from "../assets/Imepay.jpg";
 import SuccessPopup from "../components/Userdashboard/Navbar/SuccessPopup";
 import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
+import Footer from "../components/Userdashboard/Navbar/Footer.jsx";
 
 const Userdashboard = () => {
   const [recentPickups, setRecentPickups] = useState([]);
@@ -142,6 +143,8 @@ const Userdashboard = () => {
 
       {paymentSuccess && <SuccessPopup message="Payment successful! Your pickup has been processed." />}
       {paymentError && <ErrorPopup message="Payment failed. Please try again." />}
+      <Footer/>
+
     </>
   );
 };

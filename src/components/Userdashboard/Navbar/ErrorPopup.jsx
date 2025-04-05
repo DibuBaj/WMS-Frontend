@@ -5,7 +5,7 @@ const ErrorPopup = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 2000); // Auto-close after 5 seconds
+    }, 2000); 
 
     return () => clearTimeout(timer);
   }, [onClose]);
