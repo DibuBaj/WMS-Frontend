@@ -133,9 +133,9 @@ const Userdashboard = () => {
             <button className="close-button" onClick={() => setShowPopup(false)}>✖</button>
             <p>{popupMessage}</p>
             <div className="payment-options">
-              <img src={Esewa} alt="Esewa" onClick={() => handlePaymentSelection("Esewa")} className="payment-icon" />
-              <img src={Khalti} alt="Khalti" onClick={() => handlePaymentSelection("Khalti")} className="payment-icon" />
-              <img src={Imepay} alt="Imepay" onClick={() => handlePaymentSelection("Imepay")} className="payment-icon" />
+              <img className="esewa payment-icon" src={Esewa} alt="Esewa" onClick={() => handlePaymentSelection("Esewa")} />
+              <img className="khalti payment-icon" src={Khalti} alt="Khalti" onClick={() => handlePaymentSelection("Khalti")} />
+              <img className="imepay payment-icon" src={Imepay} alt="Imepay" onClick={() => handlePaymentSelection("Imepay")} />
             </div>
           </div>
         </div>
