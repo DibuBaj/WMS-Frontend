@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./UserSettings.css";
 import Adminlogo from "../../../assets/Adminlogo.svg";
 import Camera from "../../../assets/Camera.svg";
 import LogoutIcon from "../../../assets/Logouticon.svg";
 import DeleteIcon from "../../../assets/Delete.svg";
+import axios from "axios";
+
 
 const UserSettings = () => {
   const [isLogoutPopupOpen, setIsLogoutPopupOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [avatar, setAvatar] = useState(localStorage.getItem("avatar") || Adminlogo);
   const [userInfo, setUserInfo] = useState({ fullName: "", email: "" });
 
+  const navigate = useNavigate(); 
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -41,6 +46,31 @@ const UserSettings = () => {
   const closePopups = () => {
     setIsLogoutPopupOpen(false);
     setIsDeletePopupOpen(false);
+  };
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    const token = localStorage.getItem("token");
+    
+    try {
+      await axios.post("http://localhost:3000/api/auth/logout", {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      localStorage.removeItem("token");
+
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    } catch (error) {
+      console.error("Logout failed:", error);
+      localStorage.removeItem("token");
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
   };
 
   return (
@@ -115,7 +145,7 @@ const UserSettings = () => {
           <div className="popup-boxes">
             <p>Are you sure you want to logout?</p>
             <div className="popuppp-buttonss">
-              <button className="popupp-confirms">Yes</button>
+              <button className="popupp-confirms" onClick={handleLogout}>Yes</button>
               <button className="popupp-cancels" onClick={closePopups}>
                 No
               </button>
@@ -134,6 +164,15 @@ const UserSettings = () => {
                 No
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+    {isLoggingOut && (
+        <div className="logout-overlay">
+          <div className="logout-animation">
+            <span className="loading-spinner"></span>
+            <p>Logging out...</p>
           </div>
         </div>
       )}
