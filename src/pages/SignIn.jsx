@@ -124,7 +124,7 @@ const SignIn = () => {
                 />
                 <label htmlFor="rememberMe">Remember me</label>
               </div>
-              <a href="/forgot-password" className="forgot-password">Forgot password?</a>
+              <a href="#" className="forgot-password">Forgot password?</a>
             </div>
 
             <button type="submit" className="submit-btn" disabled={loading}>

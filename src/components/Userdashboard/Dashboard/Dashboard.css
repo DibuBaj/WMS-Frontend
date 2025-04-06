@@ -84,3 +84,7 @@
   filter: blur(5px);
   pointer-events: none;
 }
+
+.khalti{
+  width:110px !important;
+}
