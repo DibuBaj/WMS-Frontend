@@ -55,7 +55,7 @@ const Header = () => {
     try {
       await axios.post("http://localhost:3000/api/auth/logout", {}, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, 
         },
       });
 
