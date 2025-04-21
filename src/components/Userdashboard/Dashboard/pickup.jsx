@@ -40,7 +40,7 @@ const Pickup = ({ addPickup }) => {
     }
 
     if (isNaN(Number(amount))) {
-      setError("Amount must be a number.");
+      setError("Amount must be a number.");  
       return;
     }
 
