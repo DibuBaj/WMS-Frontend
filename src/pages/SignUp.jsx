@@ -22,6 +22,8 @@ const SignUp = () => {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState("");
+  const [passwordHints, setPasswordHints] = useState([]);
 
   const inputRefs = {
     fullName: useRef(null),
@@ -47,8 +49,46 @@ const SignUp = () => {
       [name]: type === "checkbox" ? checked : value,
     });
 
-    if (name === "password" || name === "confirmPassword") {
+    if (name === "password") {
+      validatePasswordStrength(value);
       setPasswordError("");
+    }
+
+    if (name === "confirmPassword") {
+      setPasswordError("");
+    }
+  };
+
+  const validatePasswordStrength = (password) => {
+    const hints = [];
+
+    if (password.length < 8) {
+      hints.push("Use at least 8 characters");
+    }
+    if (!/[A-Z]/.test(password)) {
+      hints.push("Add at least one uppercase letter (A-Z)");
+    }
+    if (!/[a-z]/.test(password)) {
+      hints.push("Add at least one lowercase letter (a-z)");
+    }
+    if (!/[0-9]/.test(password)) {
+      hints.push("Add at least one number (0-9)");
+    }
+    if (!/[@$!%*?#&]/.test(password)) {
+      hints.push("Add at least one special character (@$!%*?#&)");
+    }
+
+    setPasswordHints(hints);
+
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
+    const mediumPasswordRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*\d))|((?=.*[A-Z])(?=.*\d)))[A-Za-z\d@$!%*?#&]{6,}$/;
+
+    if (strongPasswordRegex.test(password)) {
+      setPasswordStrength("strong");
+    } else if (mediumPasswordRegex.test(password)) {
+      setPasswordStrength("medium");
+    } else {
+      setPasswordStrength("weak");
     }
   };
 
@@ -188,25 +228,57 @@ const SignUp = () => {
             </div>
 
             <div className="inputt-groupp">
-              <input
-                type="password"
-                name="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                className="input"
-                required
-                onFocus={() => handleFocus('password')}
-                onBlur={() => handleBlur('password')}
-                ref={inputRefs.password}
-              />
-              <label 
-                className={`input-label ${focusedField === 'password' || formData.password ? 'focused' : ''}`}
-                onClick={() => inputRefs.password.current.focus()}
-              >
-                Password
-              </label>
-            </div>
+  <input
+    type="password"
+    name="password"
+    placeholder="Enter your password"
+    value={formData.password}
+    onChange={handleChange}
+    className="input"
+    required
+    onFocus={() => handleFocus('password')}
+    onBlur={() => handleBlur('password')}
+    ref={inputRefs.password}
+  />
+  <label 
+    className={`input-label ${focusedField === 'password' || formData.password ? 'focused' : ''}`}
+    onClick={() => inputRefs.password.current.focus()}
+  >
+    Password
+  </label>
+
+  {/* Only show password strength and hints when password field is focused */}
+  {focusedField === 'password' && (
+    <>
+      {/* Password Strength Bar and Text */}
+      {passwordStrength && (
+        <div className="password-strength-container">
+          <div className="password-strength-bar">
+            <div className={`bar ${passwordStrength}`}></div>
+          </div>
+          <div className={`strength-text ${passwordStrength}`}>
+            {passwordStrength === 'weak' && "Weak Password"}
+            {passwordStrength === 'medium' && "Medium Strength"}
+            {passwordStrength === 'strong' && "Strong Password"}
+          </div>
+        </div>
+      )}
+
+      {/* Password Hints */}
+      {passwordHints.length > 0 && (
+        <div className="password-hints">
+          <p>To make your password stronger:</p>
+          <ul>
+            {passwordHints.map((hint, index) => (
+              <li key={index}>{hint}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
+  )}
+</div>
+
 
             <div className="inputt-groupp">
               <input
