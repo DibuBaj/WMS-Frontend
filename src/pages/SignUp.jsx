@@ -152,7 +152,8 @@ const SignUp = () => {
       setShowSuccessPopup(true);
 
       setTimeout(() => {
-        navigate("/signin");
+        // Pass the email to OTP page
+        navigate("/Otpverification", { state: { email: formData.email } });
       }, 2000);
     } catch (error) {
       setPopupMessage(error.message || "Registration failed");
