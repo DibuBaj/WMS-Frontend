@@ -9,6 +9,8 @@ import Collection from "./components/AdminDashboard/Dashboard/Collection";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
+import Otp from "./pages/Otp.jsx";
+
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/settings" element={<Settings/>} />
         <Route path = "/collection" element={<Collection/>}/>
         <Route path = "/pickupmanagement" element={<PickupManagement/>}/>
+        <Route path="/Otpverification" element={<Otp/>} />
+
       </Routes>
     </Router>
   );
