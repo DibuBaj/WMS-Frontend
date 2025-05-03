@@ -139,12 +139,12 @@ const Userschedule = () => {
       if (response.ok) {
         setData(data.filter((item) => item.id !== id));
         setMenuOpen(null);
-        showSuccess("Deleted Successfully!");
+        showSuccess("Cancelled Successfully!");
       } else {
-        showError(result.message || "Failed to delete entry.");
+        showError(result.message || "Failed to cancel entry.");
       }
     } catch (error) {
-      showError("Error deleting the entry.");
+      showError("Error canceling the entry.");
     }
   };
   
@@ -225,7 +225,7 @@ const Userschedule = () => {
                 {menuOpen === row.id && (
                   <div className="dropdown-menu">
                     <button onClick={() => handleEdit(row)}>Edit</button>
-                    <button onClick={() => handleDelete(row.id)}>Delete</button>
+                    <button onClick={() => handleDelete(row.id)}>Cancel</button>
                   </div>
                 )}
               </td>

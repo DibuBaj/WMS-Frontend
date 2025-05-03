@@ -6,7 +6,7 @@ const Pickup = ({ addPickup }) => {
   const [formData, setFormData] = useState({
     address: '',
     dateTime: '',
-    subscription: '1 Day ($1)',
+    subscription: '1 Day (Rs.500)',
     wasteType: 'Organic',
     amount: '',
     unit: 'kg'
@@ -73,7 +73,7 @@ const Pickup = ({ addPickup }) => {
       setFormData({
         address: '',
         dateTime: '',
-        subscription: '1 Day ($1)',
+        subscription: '1 Day (Rs.500)',
         wasteType: 'Organic',
         amount: '',
         unit: 'kg'
@@ -127,9 +127,9 @@ const Pickup = ({ addPickup }) => {
             className="pickup-select"
             required
           >
-            <option value="1 Day ($1)">1 Day ($1)</option>
-            <option value="1 Month ($10)">1 Month ($10)</option>
-            <option value="1 Year ($100)">1 Year ($100)</option>
+            <option value="1 Day (Rs.500)">1 Day (Rs.500)</option>
+            <option value="1 Month (Rs.5000)">1 Month (Rs.5000)</option>
+            <option value="1 Year (Rs.50000)">1 Year (Rs.50000)</option>
           </select>
         </div>
 
@@ -149,7 +149,7 @@ const Pickup = ({ addPickup }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Amount</label>
+          <label className="form-label">Waste Amount</label>
           <input
             type="number"
             name="amount"
