@@ -62,12 +62,12 @@ const Header = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
 
-      setTimeout(() => navigate("/signin"), 2000);
+      setTimeout(() => navigate("/signin"));
     } catch (err) {
       console.error("Logout failed:", err);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      setTimeout(() => navigate("/signin"), 2000);
+      setTimeout(() => navigate("/signin"));
     }
   };
 
