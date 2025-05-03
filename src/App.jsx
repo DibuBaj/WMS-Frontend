@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -11,21 +11,64 @@ import Settings from "./pages/Settings";
 import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
 import Otp from "./pages/Otp.jsx";
 
+const ADMIN_EMAIL = "greenbinpvtltd@gmail.com";
+
+// Protect routes for authenticated non-admin users
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  if (!token) {
+    return <Navigate to="/signin" replace />;
+  }
+
+  if (user.email === ADMIN_EMAIL) {
+    return <Navigate to="/admindashboard" replace />;
+  }
+
+  return children;
+}
+
+// Protect routes for admin users only
+function AdminRoute({ children }) {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  if (!token || user.email !== ADMIN_EMAIL) {
+    return <Navigate to="/userdashboard" replace />;
+  }
+
+  return children;
+}
 
 function App() {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  // Determine redirect based on user type
+  const redirectPath = token
+    ? user.email === ADMIN_EMAIL
+      ? "/admindashboard"
+      : "/userdashboard"
+    : "/signin";
+
   return (
     <Router>
       <Routes>
-        <Route path="/admindashboard" element={<AdminDashboard />} />
-        <Route path="/" element={<SignUp/>} />
-        <Route path="/signin" element={<SignIn/>} />
-        <Route path="/userdashboard" element={<Userdashboard/>} />
-        <Route path="/schedule" element={<Schedule/>} />
-        <Route path="/settings" element={<Settings/>} />
-        <Route path = "/collection" element={<Collection/>}/>
-        <Route path = "/pickupmanagement" element={<PickupManagement/>}/>
-        <Route path="/Otpverification" element={<Otp/>} />
+        {/* Public routes, but redirect if already logged in */}
+        <Route path="/" element={token ? <Navigate to={redirectPath} replace /> : <SignUp />} />
+        <Route path="/signin" element={token ? <Navigate to={redirectPath} replace /> : <SignIn />} />
+        <Route path="/Otpverification" element={<Otp />} />
 
+        {/* Protected user routes */}
+        <Route path="/userdashboard" element={<ProtectedRoute><Userdashboard /></ProtectedRoute>} />
+        <Route path="/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+
+        {/* Admin-only routes */}
+        <Route path="/admindashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/collection" element={<AdminRoute><Collection /></AdminRoute>} />
+        <Route path="/pickupmanagement" element={<AdminRoute><PickupManagement /></AdminRoute>} />
       </Routes>
     </Router>
   );
