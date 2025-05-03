@@ -1,3 +1,82 @@
+// import React, { useState } from "react";
+// import { useLocation, useNavigate } from "react-router-dom";
+// import "../styles/Otp.css";
+// import Otpp from "../assets/Otpp.png";
+
+// const Otp = () => {
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const email = location.state?.email || "your@email.com";
+
+//   const [otp, setOtp] = useState(["", "", "", ""]);
+
+//   const handleChange = (e, index) => {
+//     const value = e.target.value;
+//     if (!isNaN(value) && value.length <= 1) {
+//       const updatedOtp = [...otp];
+//       updatedOtp[index] = value;
+//       setOtp(updatedOtp);
+
+//       // Auto focus next input
+//       if (value && index < 3) {
+//         document.getElementById(`otp-${index + 1}`).focus();
+//       }
+//     }
+//   };
+
+//   const handleSubmit = () => {
+//     const enteredOtp = otp.join("");
+//     // Call API or verification logic here
+//     if (enteredOtp.length === 4) {
+//       alert(`OTP Verified: ${enteredOtp}`);
+//       navigate("/signin");
+//     } else {
+//       alert("Please enter the 4-digit OTP.");
+//     }
+//   };
+
+//   return (
+//     <div className="otp-container">
+//       <img src={Otpp} alt="OTP" className="otp-image" />
+
+//       <h2 className="otp-title">OTP Verification</h2>
+//       <p className="otp-subtitle">
+//         Enter the OTP sent to <strong>{email}</strong>
+//       </p>
+
+//       <div className="otp-inputs">
+//         {otp.map((digit, index) => (
+//           <input
+//             key={index}
+//             id={`otp-${index}`}
+//             type="text"
+//             maxLength="1"
+//             value={digit}
+//             onChange={(e) => handleChange(e, index)}
+//             className="otp-box"
+//           />
+//         ))}
+//       </div>
+
+//       <p className="resend-code">Resend code</p>
+
+//       <button className="verify-btn" onClick={handleSubmit}>
+//         Verify & Proceed
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default Otp;
+
+
+
+
+
+
+
+
+
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/Otp.css";
@@ -6,9 +85,15 @@ import Otpp from "../assets/Otpp.png";
 const Otp = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state?.email || "your@email.com";
 
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const email = location.state?.email || "your@email.com";
+  const fullName = location.state?.fullName || "Test User";
+  const phoneNumber = location.state?.phoneNumber || "+1234567890";
+  const password = location.state?.password || "password123";
+  const address = location.state?.address || "123 Test Street";
+
+  const [otp, setOtp] = useState(new Array(6).fill(""));
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e, index) => {
     const value = e.target.value;
@@ -17,21 +102,78 @@ const Otp = () => {
       updatedOtp[index] = value;
       setOtp(updatedOtp);
 
-      // Auto focus next input
-      if (value && index < 3) {
+      if (value && index < 6) {
         document.getElementById(`otp-${index + 1}`).focus();
       }
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const enteredOtp = otp.join("");
-    // Call API or verification logic here
-    if (enteredOtp.length === 4) {
-      alert(`OTP Verified: ${enteredOtp}`);
-      navigate("/signin");
-    } else {
-      alert("Please enter the 4-digit OTP.");
+    if (enteredOtp.length !== 6) {
+      alert("Please enter the 6-digit OTP.");
+      return;
+    }
+
+    const payload = {
+      email,
+      otp: enteredOtp,
+      fullName,
+      phoneNumber,
+      password,
+      address,
+    };
+
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:3000/api/users/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("OTP verified successfully!");
+        navigate("/signin");
+      } else {
+        alert(result.message || "OTP verification failed.");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      alert("An error occurred while verifying OTP.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    try {
+      setLoading(true);
+      // Replace this URL with actual resend OTP API if different
+      const response = await fetch("http://localhost:3000/api/users/resend-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert("OTP resent successfully!");
+      } else {
+        alert(result.message || "Failed to resend OTP.");
+      }
+    } catch (error) {
+      console.error("Error resending OTP:", error);
+      alert("An error occurred while resending OTP.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,10 +200,12 @@ const Otp = () => {
         ))}
       </div>
 
-      <p className="resend-code">Resend code</p>
+      <p className="resend-code" onClick={handleResend} style={{ cursor: "pointer", color: "blue" }}>
+        Resend code
+      </p>
 
-      <button className="verify-btn" onClick={handleSubmit}>
-        Verify & Proceed
+      <button className="verify-btn" onClick={handleSubmit} disabled={loading}>
+        {loading ? "Verifying..." : "Verify & Proceed"}
       </button>
     </div>
   );

@@ -490,32 +490,32 @@ const SignUp = () => {
     setShowErrorPopup(false);
     setShowSuccessPopup(false);
     setPasswordError("");
-
+  
     if (!validatePasswords()) {
       setLoading(false);
       return;
     }
-
+  
     if (!formData.agreedToTerms) {
       setPopupMessage("You must agree to the terms and conditions");
       setShowErrorPopup(true);
       setLoading(false);
       return;
     }
-
+  
     try {
       const userData = {
         fullName: formData.fullName,
         email: formData.email,
+        phoneNumber: formData.phone, // ✅ fixed key
         address: formData.address,
-        phone: formData.phone,
         password: formData.password,
       };
-
+  
       await registerUser(userData);
       setPopupMessage("Account created successfully! Redirecting...");
       setShowSuccessPopup(true);
-
+  
       setTimeout(() => {
         navigate("/Otpverification", { state: { email: formData.email } });
       }, 2000);
@@ -526,6 +526,7 @@ const SignUp = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div
