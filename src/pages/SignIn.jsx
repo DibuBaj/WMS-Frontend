@@ -124,7 +124,7 @@ const SignIn = () => {
                 />
                 <label htmlFor="rememberMe">Remember me</label>
               </div>
-              <a href="#" className="forgot-password">Forgot password?</a>
+              <a onClick={() => navigate('/forgotpassword')} className="forgot-password">Forgot password?</a>
             </div>
 
             <button type="submit" className="submit-btn" disabled={loading}>
@@ -133,7 +133,7 @@ const SignIn = () => {
           </form>
         )}
 
-        <p className="signup-text">
+        <p  className="signup-text">
           Don't have an account? <a href="/" className="signup-link">Sign up</a>
         </p>
       </div>

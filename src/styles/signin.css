@@ -145,6 +145,7 @@ html, body {
 .forgot-password:hover {
   color: #1b5e20;
   text-decoration: underline;
+  cursor:pointer;
 }
 
 .submit-btn {
