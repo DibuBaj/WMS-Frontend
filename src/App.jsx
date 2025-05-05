@@ -9,6 +9,7 @@ import Collection from "./components/AdminDashboard/Dashboard/Collection.jsx";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
+import AdminRoutesPage from "./components/AdminDashboard/Dashboard/Routes";
 import Otp from "./pages/Otp.jsx";
 
 const ADMIN_EMAIL = "greenbinpvtltd@gmail.com";
@@ -69,6 +70,7 @@ function App() {
         <Route path="/admindashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/collection" element={<AdminRoute><Collection/></AdminRoute>} />
         <Route path="/pickupmanagement" element={<AdminRoute><PickupManagement /></AdminRoute>} />
+        <Route path="/routes" element={<AdminRoute><AdminRoutesPage /></AdminRoute>} />
       </Routes>
     </Router>
   );
