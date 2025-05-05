@@ -50,6 +50,15 @@ const Sidebarr = () => {
             <span className="sidebar__text">All Pickup</span>
           </NavLink>
         </li>
+        <li className="sidebar__menu-item">
+          <NavLink 
+            to="/routes" 
+            className={({ isActive }) => `sidebar__link ${isActive ? "sidebar__link--active" : ""}`}
+          >
+            <img src={ScheduleIcon} alt="Routes" className="sidebar__icon" />
+            <span className="sidebar__text">Routes</span>
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );

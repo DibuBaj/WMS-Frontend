@@ -10,6 +10,10 @@ import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+import AdminRoutesPage from "./components/AdminDashboard/Dashboard/Routes";
+>>>>>>> 9598a9f (Routes)
 import Otp from "./pages/Otp.jsx";
 
 <<<<<<< HEAD
@@ -90,7 +94,11 @@ function App() {
         <Route path="/admindashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/collection" element={<AdminRoute><Collection/></AdminRoute>} />
         <Route path="/pickupmanagement" element={<AdminRoute><PickupManagement /></AdminRoute>} />
+<<<<<<< HEAD
 >>>>>>> 1f14a48 (Authentication)
+=======
+        <Route path="/routes" element={<AdminRoute><AdminRoutesPage /></AdminRoute>} />
+>>>>>>> 9598a9f (Routes)
       </Routes>
     </Router>
   );
