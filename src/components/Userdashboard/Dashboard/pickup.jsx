@@ -16,10 +16,42 @@ const Pickup = ({ addPickup }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+
+    // Handle unit change with conversion
+    if (name === "unit") {
+      setFormData(prev => {
+        const currentAmount = parseFloat(prev.amount);
+        if (!isNaN(currentAmount)) {
+          let newAmount = currentAmount;
+          if (value === "g" && prev.unit === "kg") {
+            newAmount = currentAmount * 1000;
+          } else if (value === "kg" && prev.unit === "g" && currentAmount >= 1000) {
+            newAmount = currentAmount / 1000;
+          }
+          return { ...prev, unit: value, amount: newAmount.toString() };
+        }
+        return { ...prev, unit: value };
+      });
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
+  const handleAmountConversion = () => {
+    setFormData(prev => {
+      const amt = parseFloat(prev.amount);
+      if (prev.unit === "g" && amt >= 1000) {
+        return {
+          ...prev,
+          amount: (amt / 1000).toString(),
+          unit: "kg"
+        };
+      }
+      return prev;
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -32,7 +64,7 @@ const Pickup = ({ addPickup }) => {
       return;
     }
 
-    const { address, dateTime, subscription, wasteType, amount, unit } = formData;
+    let { address, dateTime, subscription, wasteType, amount, unit } = formData;
 
     if (!address || !dateTime || !amount) {
       setError("All fields are required.");
@@ -40,15 +72,20 @@ const Pickup = ({ addPickup }) => {
     }
 
     if (isNaN(Number(amount))) {
-      setError("Amount must be a number.");  
+      setError("Amount must be a number.");
       return;
+    }
+
+    if (unit === 'g' && Number(amount) >= 1000) {
+      amount = Number(amount) / 1000;
+      unit = 'kg';
     }
 
     const payload = {
       address,
       pickupDateTime: new Date(dateTime).toISOString(),
       subscription,
-      wasteType: wasteType.toLowerCase(), 
+      wasteType: wasteType.toLowerCase(),
       amount: Number(amount),
       unit
     };
@@ -155,6 +192,10 @@ const Pickup = ({ addPickup }) => {
             name="amount"
             value={formData.amount}
             onChange={handleChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") handleAmountConversion();
+            }}
+            onBlur={handleAmountConversion}
             placeholder="Enter amount"
             className="pickup-input"
             min="1"
