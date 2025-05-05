@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../Navbar/Header';
-import Sidebarr from '../Navbar/Sidebarr';
+import AdminLayout from "../Navbar/AdminLayout";
 import './Collection.css';
 
-const Collection= () => {
+const Collection = () => {
   const [showModal, setShowModal] = useState(false);
   const [newCollection, setNewCollection] = useState({
     type: '',
@@ -87,96 +86,91 @@ const Collection= () => {
   };
 
   return (
-    <div>
-      <Header />
-      <div className="collection-container">
-        <Sidebarr />
-
-        <div className="collection-content">
-          <div className="collection-top-row">
-            <div className="collection-search-bar">
-              <input
-                type="text"
-                placeholder="Search collections..."
-                className="collection-search-input"
-              />
-              <span className="collection-search-icon">🔍</span>
-            </div>
-            <button className="collection-new-btn" onClick={() => setShowModal(true)}>
-              New Collection
-            </button>
+    <AdminLayout>
+      <div className="collection-content">
+        <div className="collection-top-row">
+          <div className="collection-search-bar">
+            <input
+              type="text"
+              placeholder="Search collections..."
+              className="collection-search-input"
+            />
+            <span className="collection-search-icon">🔍</span>
           </div>
+          <button className="collection-new-btn" onClick={() => setShowModal(true)}>
+            New Collection
+          </button>
+        </div>
 
-          {showModal && (
-            <div className="modal-overlay">
-              <div className="modal-content">
-                <button className="modal-close" onClick={() => setShowModal(false)}>&#10005;</button>
-                <h2 className="modal-title">New Collection</h2>
-                <form onSubmit={handleCreate}>
-                  <input
-                    className="modal-input"
-                    type="text"
-                    value={newCollection.type}
-                    onChange={e => setNewCollection({ ...newCollection, type: e.target.value })}
-                    placeholder="Type (e.g. recycle)"
-                    required
-                  />
-                  <input
-                    className="modal-input"
-                    type="number"
-                    value={newCollection.amount}
-                    onChange={e => setNewCollection({ ...newCollection, amount: e.target.value })}
-                    placeholder="Amount in kg"
-                    required
-                  />
-                  <input
-                    className="modal-input"
-                    type="text"
-                    value={newCollection.notes}
-                    onChange={e => setNewCollection({ ...newCollection, notes: e.target.value })}
-                    placeholder="Notes"
-                    required
-                  />
-                  <select
-                    className="modal-input"
-                    value={newCollection.status}
-                    onChange={e => setNewCollection({ ...newCollection, status: e.target.value })}
-                    required
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="completed">Completed</option>
-                  </select>
-                  <button className="modal-create-btn" type="submit" disabled={loading}>
-                    CREATE
-                  </button>
-                </form>
-                {error && <div className="modal-error">{error}</div>}
+        {showModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button className="modal-close" onClick={() => setShowModal(false)}>&#10005;</button>
+              <h2 className="modal-title">New Collection</h2>
+              <form onSubmit={handleCreate}>
+                <input
+                  className="modal-input"
+                  type="text"
+                  value={newCollection.type}
+                  onChange={e => setNewCollection({ ...newCollection, type: e.target.value })}
+                  placeholder="Type (e.g. recycle)"
+                  required
+                />
+                <input
+                  className="modal-input"
+                  type="number"
+                  value={newCollection.amount}
+                  onChange={e => setNewCollection({ ...newCollection, amount: e.target.value })}
+                  placeholder="Amount in kg"
+                  required
+                />
+                <input
+                  className="modal-input"
+                  type="text"
+                  value={newCollection.notes}
+                  onChange={e => setNewCollection({ ...newCollection, notes: e.target.value })}
+                  placeholder="Notes"
+                  required
+                />
+                <select
+                  className="modal-input"
+                  value={newCollection.status}
+                  onChange={e => setNewCollection({ ...newCollection, status: e.target.value })}
+                  required
+                >
+                  <option value="pending">Pending</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <button className="modal-create-btn" type="submit" disabled={loading}>
+                  CREATE
+                </button>
+              </form>
+              {error && <div className="modal-error">{error}</div>}
+            </div>
+          </div>
+        )}
+
+        <div className="collection-stats-grid">
+          {loading ? (
+            <p>Loading...</p>
+          ) : collections.length > 0 ? (
+            collections.map((col) => (
+              <div className="collection-stat-card" key={col._id}>
+                <span className="collection-info-icon">?</span>
+                <h3>{col.type}</h3>
+                <p className="collection-stat-value">{col.amount} kg</p>
+                <p className="collection-stat-value">{col.status}</p>
+                <p className="collection-stat-value">
+                  {new Date(col.createdAt).toLocaleDateString()}
+                </p>
               </div>
-            </div>
+            ))
+          ) : (
+            <p>No collections found.</p>
           )}
-
-          <div className="collection-stats-grid">
-            {loading ? (
-              <p>Loading...</p>
-            ) : collections.length > 0 ? (
-              collections.map((col) => (
-                <div className="collection-stat-card" key={col._id}>
-                  <span className="collection-info-icon">?</span>
-                  <h3>{col.type}</h3>
-                  <p className="collection-stat-value">{col.amount} kg</p>
-                  <p className="collection-stat-value">{col.status}</p>
-                  <p className="collection-stat-value">
-                    {new Date(col.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-              ))
-            ) : (
-              <p>No collections found.</p>
-            )}
-          </div>
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 
