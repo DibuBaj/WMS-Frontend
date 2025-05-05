@@ -2,12 +2,17 @@
 .dashboard-container {
   display: flex;
 <<<<<<< HEAD
+<<<<<<< HEAD
   /* min-height: 100vh; */
 =======
   min-height: 100vh;
 >>>>>>> da5f14c (updated the codes)
+=======
+  min-height: 100vh;
+>>>>>>> e1879a9 (Admin Navbar)
   background-color: #f9f9f9; /* Lighter background like design */
   font-family: 'Arial', sans-serif; /* Or match Figma font */
+  padding-top: 60px; /* Add padding to account for fixed header */
 }
 
 /* Dashboard Content Area */
@@ -19,6 +24,7 @@
   display: flex;
   flex-direction: column; /* Stack top row and activities */
   gap: 30px; /* Space between top row and activities */
+  margin-top: 0; /* Remove any existing top margin */
 }
 
 /* General Card Styling */
