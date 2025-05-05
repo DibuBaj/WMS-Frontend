@@ -5,7 +5,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Userdashboard from "./pages/Userdashboard";
 import AdminDashboard from "./components/AdminDashboard/Dashboard/AdminDashboard";
-import Collection from "./components/AdminDashboard/Dashboard/Collection";
+import Collection from "./components/AdminDashboard/Dashboard/Collection.jsx";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManagement";
@@ -88,7 +88,7 @@ function App() {
 
         {/* Admin-only routes */}
         <Route path="/admindashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-        <Route path="/collection" element={<AdminRoute><Collection /></AdminRoute>} />
+        <Route path="/collection" element={<AdminRoute><Collection/></AdminRoute>} />
         <Route path="/pickupmanagement" element={<AdminRoute><PickupManagement /></AdminRoute>} />
 >>>>>>> 1f14a48 (Authentication)
       </Routes>
