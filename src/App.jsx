@@ -15,6 +15,10 @@ import PickupManagement from "./components/AdminDashboard/Dashboard/PickupManage
 import AdminRoutesPage from "./components/AdminDashboard/Dashboard/Routes";
 >>>>>>> 9598a9f (Routes)
 import Otp from "./pages/Otp.jsx";
+import ForgotPassword from "./pages/Forgotpassword.jsx";
+import ForgotOtp from "./pages/ForgotOtp.jsx";
+import SetNewPassword from "./pages/SetNewPassword.jsx";
+import PasswordUpdated from "./pages/PasswordUpdated.jsx";
 
 <<<<<<< HEAD
 =======
@@ -84,11 +88,16 @@ function App() {
         <Route path="/" element={token ? <Navigate to={redirectPath} replace /> : <SignUp />} />
         <Route path="/signin" element={token ? <Navigate to={redirectPath} replace /> : <SignIn />} />
         <Route path="/Otpverification" element={<Otp />} />
+        <Route path="/forgotpassword" element={<ForgotPassword/>} />
+        <Route path="/forgototp" element={<ForgotOtp/>} />
+        <Route path="/setpassword" element={<SetNewPassword/>} />
+        <Route path="/passwordupdate" element={<PasswordUpdated/>} />
 
         {/* Protected user routes */}
         <Route path="/userdashboard" element={<ProtectedRoute><Userdashboard /></ProtectedRoute>} />
         <Route path="/schedule" element={<ProtectedRoute><Schedule /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        
 
         {/* Admin-only routes */}
         <Route path="/admindashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
