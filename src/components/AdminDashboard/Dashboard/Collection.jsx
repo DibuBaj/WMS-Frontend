@@ -13,21 +13,33 @@ const Collection = () => {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const token = localStorage.getItem("token");
-    if (!token) {
-      setError("User not authenticated. Please log in.");
-      return;
-    }
+  // Check for token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     
-  console.log("Token",token);
+    if (!token) {
+      setError("Please log in to access this page.");
+    } else if (user.email !== "greenbinpvtltd@gmail.com") {
+      setError("Admin access required. Please log in as admin.");
+    } else {
+      fetchCollections();
+    }
+  }, []);
+
   const fetchCollections = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
     setLoading(true);
     try {
       const res = await fetch('http://localhost:3000/api/collections', {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
       });
       const data = await res.json();
@@ -43,12 +55,14 @@ const Collection = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    fetchCollections();
-  }, []);
-
   const handleCreate = async (e) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Please log in to access this page.");
+      return;
+    }
+
     const { type, amount, notes, status } = newCollection;
     if (!type || !amount || !notes || !status) {
       setError('All fields are required.');
@@ -61,6 +75,7 @@ const Collection = () => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           type,
@@ -85,6 +100,11 @@ const Collection = () => {
     setLoading(false);
   };
 
+  const filteredCollections = collections.filter(collection =>
+    collection.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    collection.status.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <AdminLayout>
       <div className="collection-content">
@@ -94,6 +114,8 @@ const Collection = () => {
               type="text"
               placeholder="Search collections..."
               className="collection-search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <span className="collection-search-icon">🔍</span>
           </div>
@@ -142,7 +164,7 @@ const Collection = () => {
                   <option value="completed">Completed</option>
                 </select>
                 <button className="modal-create-btn" type="submit" disabled={loading}>
-                  CREATE
+                  {loading ? 'Creating...' : 'CREATE'}
                 </button>
               </form>
               {error && <div className="modal-error">{error}</div>}
@@ -150,23 +172,33 @@ const Collection = () => {
           </div>
         )}
 
+        {error && <div className="collection-error">{error}</div>}
+
         <div className="collection-stats-grid">
           {loading ? (
-            <p>Loading...</p>
-          ) : collections.length > 0 ? (
-            collections.map((col) => (
+            <div className="collection-loading">Loading collections...</div>
+          ) : filteredCollections.length > 0 ? (
+            filteredCollections.map((col) => (
               <div className="collection-stat-card" key={col._id}>
-                <span className="collection-info-icon">?</span>
-                <h3>{col.type}</h3>
-                <p className="collection-stat-value">{col.amount} kg</p>
-                <p className="collection-stat-value">{col.status}</p>
-                <p className="collection-stat-value">
-                  {new Date(col.createdAt).toLocaleDateString()}
-                </p>
+                <div className="collection-card-header">
+                  <h3>{col.type}</h3>
+                  <span className={`collection-status ${col.status}`}>
+                    {col.status}
+                  </span>
+                </div>
+                <div className="collection-card-body">
+                  <p className="collection-amount">{col.amount} kg</p>
+                  <p className="collection-notes">{col.notes}</p>
+                  <p className="collection-date">
+                    {new Date(col.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
               </div>
             ))
           ) : (
-            <p>No collections found.</p>
+            <div className="collection-empty">
+              {searchTerm ? 'No collections match your search.' : 'No collections found.'}
+            </div>
           )}
         </div>
       </div>

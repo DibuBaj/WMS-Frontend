@@ -7,6 +7,9 @@ import "../styles/signin.css";
 import Logo from "../assets/Logo.svg";
 import Background from "../assets/Background.png";
 
+const ADMIN_EMAIL = "greenbinpvtltd@gmail.com";
+const ADMIN_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTY0YzY3N2Y0MTQ0MmJmMWY2NmU0OCIsImlhdCI6MTc0NjI5MTg3NCwiZXhwIjoxNzQ4ODgzODc0fQ.RnHnhrrQ3APBEaA7qSPNpVutXsUo89A4SeAAXqUubSU";
+
 const SignIn = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -37,16 +40,31 @@ const SignIn = () => {
         password: formData.password,
       });
 
+      // Store the token
       localStorage.setItem("token", response.data.token);
-      if (response.data.user) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+      
+      // Store user data with email
+      const userData = {
+        ...response.data.user,
+        email: formData.email // Ensure email is included
+      };
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // If it's an admin user, store the admin token
+      if (formData.email === ADMIN_EMAIL) {
+        localStorage.setItem("adminToken", ADMIN_TOKEN);
       }
 
       setPopupMessage("Login successful! Redirecting...");
       setShowSuccessPopup(true);
 
+      // Redirect based on user type
       setTimeout(() => {
-        navigate("/userdashboard");
+        if (formData.email === ADMIN_EMAIL) {
+          navigate("/admindashboard");
+        } else {
+          navigate("/userdashboard");
+        }
       }, 2000);
     } catch (err) {
       setPopupMessage(err.response?.data?.message || "Invalid credentials");
@@ -133,7 +151,7 @@ const SignIn = () => {
           </form>
         )}
 
-        <p  className="signup-text">
+        <p className="signup-text">
           Don't have an account? <a href="/" className="signup-link">Sign up</a>
         </p>
       </div>
