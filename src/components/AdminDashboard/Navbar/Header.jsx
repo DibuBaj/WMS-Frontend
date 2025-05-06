@@ -45,13 +45,14 @@ const Header = () => {
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-
-      setTimeout(() => navigate("/signin"));
+      navigate("/signin");
     } catch (err) {
       console.error("Logout failed:", err);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      setTimeout(() => navigate("/signin"));
+      navigate("/signin");
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
