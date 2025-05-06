@@ -83,12 +83,6 @@
   border-radius: 0; 
 }
 
-.profile-container {
-  position: absolute;
-  top: 20px; 
-  right: 20px; 
-  cursor: pointer;
-}
 
 .dropdownn-menuu {
   position: absolute;

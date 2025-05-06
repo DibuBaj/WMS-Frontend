@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AdminLayout from "../Navbar/AdminLayout";
+import AdminLayout from '../Navbar/AdminLayout';
 import './Collection.css';
 
 const Collection = () => {
