@@ -45,26 +45,22 @@ const Header = () => {
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
-
   const handleLogout = async () => {
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
-    
-    setTimeout(() => navigate("/signin"), 3000);
+  
     try {
       await axios.post("http://localhost:3000/api/auth/logout", {}, {
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
-  
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
     } catch (err) {
       console.error("Logout failed:", err);
+    } finally {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      setTimeout(() => navigate("/signin"), 1500);
+      setTimeout(() => navigate("/signin"), 1000); // Give a small delay for animation if needed
     }
   };
   
