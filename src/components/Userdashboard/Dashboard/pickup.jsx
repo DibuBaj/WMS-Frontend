@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./Pickup.css";
 
@@ -9,10 +9,31 @@ const Pickup = ({ addPickup }) => {
     subscription: '1 Day (Rs.500)',
     wasteType: 'Organic',
     amount: '',
-    unit: 'kg'
+    unit: 'kg',
+    route: ''
   });
 
+  const [routes, setRoutes] = useState([]);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchRoutes = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/route/get-routes');
+        if (response.data.success) {
+          // Only show routes that are in Scheduled or No Schedule status
+          const availableRoutes = response.data.data.filter(route => 
+            route.status === 'Scheduled' || route.status === 'No Schedule'
+          );
+          setRoutes(availableRoutes);
+        }
+      } catch (err) {
+        console.error('Error fetching routes:', err);
+        setError('Failed to load routes. Please try again.');
+      }
+    };
+    fetchRoutes();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,9 +85,9 @@ const Pickup = ({ addPickup }) => {
       return;
     }
 
-    let { address, dateTime, subscription, wasteType, amount, unit } = formData;
+    let { address, dateTime, subscription, wasteType, amount, unit, route } = formData;
 
-    if (!address || !dateTime || !amount) {
+    if (!address || !dateTime || !amount || !route) {
       setError("All fields are required.");
       return;
     }
@@ -87,7 +108,8 @@ const Pickup = ({ addPickup }) => {
       subscription,
       wasteType: wasteType.toLowerCase(),
       amount: Number(amount),
-      unit
+      unit,
+      route
     };
 
     console.log("Sending Payload:", payload);
@@ -107,14 +129,14 @@ const Pickup = ({ addPickup }) => {
       console.log("Pickup Scheduled Successfully:", response.data);
       addPickup(payload);
 
-
       setFormData({
         address: '',
         dateTime: '',
         subscription: '1 Day (Rs.500)',
         wasteType: 'Organic',
         amount: '',
-        unit: 'kg'
+        unit: 'kg',
+        route: ''
       });
 
     } catch (err) {
@@ -154,6 +176,24 @@ const Pickup = ({ addPickup }) => {
             className="pickup-input"
             required
           />
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Route</label>
+          <select
+            name="route"
+            value={formData.route}
+            onChange={handleChange}
+            className="pickup-select"
+            required
+          >
+            <option value="">Select a route</option>
+            {routes.map(route => (
+              <option key={route._id} value={route._id}>
+                {route.routeName} ({route.routeId})
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
