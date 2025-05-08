@@ -1,16 +1,55 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/Forgotpassword.css'; 
+import React, { useState, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
+
+import '../styles/Forgotpassword.css';
 import formImage from '../assets/Mail.png';
 
 const ForgotOtp = () => {
-    const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const email = location.state?.email || 'your email';
 
-    const handleContinue = () => {
-      navigate('/setpassword'); 
-    };
+  const inputRefs = Array.from({ length: 6 }, () => useRef(null));
+  const [error, setError] = useState(false); 
+
+  const handleInput = (e, index) => {
+    const value = e.target.value;
+    if (!/^\d$/.test(value)) {
+      e.target.value = '';
+      return;
+    }
+
+    if (index < inputRefs.length - 1) {
+      inputRefs[index + 1].current.focus();
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+      inputRefs[index - 1].current.focus();
+    }
+  };
+
+  const handleContinue = () => {
+    const otp = inputRefs.map((ref) => ref.current.value).join('');
+    
+    if (otp.length === 6) {
+      navigate('/setpassword');
+    } else {
+      setError(true); 
+    }
+  };
+
+  const closeErrorPopup = () => {
+    setError(false); 
+  };
+
   return (
     <div className="forgot-password-container">
+      {/* Error Popup */}
+      {error && <ErrorPopup message="Please fill in all OTP fields." onClose={closeErrorPopup} />}
+      
       <div className="forms-section">
         <div className="progress-bar-wrapper">
           <h4>Check your mail</h4>
@@ -23,22 +62,29 @@ const ForgotOtp = () => {
         <img src={formImage} alt="Mail icon" className="form-image" />
 
         <h2>Check your mail!</h2>
-        <p className="subtitle">We sent a 6-digit OTP to mario@phamatin.com</p>
+        <p className="subtitle">
+          We sent a 6-digit OTP to <strong>{email}</strong>
+        </p>
 
         <div className="otp-inputs">
-          {[...Array(6)].map((_, i) => (
-            <input key={i} type="text" maxLength="1" className="otp-box" />
+          {inputRefs.map((ref, i) => (
+            <input
+              key={i}
+              ref={ref}
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength="1"
+              className="otp-box"
+              onInput={(e) => handleInput(e, i)}
+              onKeyDown={(e) => handleKeyDown(e, i)}
+            />
           ))}
         </div>
 
-        {/* <button>Verify OTP</button> */}
         <button onClick={handleContinue}>Verify OTP</button>
         <a href="/signin" className="back">Back to Sign in</a>
       </div>
-
-      {/* <div className="image-section">
-        {/* Optional side image 
-      </div> */}
     </div>
   );
 };

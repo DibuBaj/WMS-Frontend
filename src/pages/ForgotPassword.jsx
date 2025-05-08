@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import '../styles/Forgotpassword.css';
 import formImage from '../assets/forgotpassword.jpg';
+import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
 
 const ForgotPassword = () => {
   const navigate = useNavigate(); 
+  const [email, setEmail] = useState('');
+  const [showError, setShowError] = useState(false);
 
   const handleContinue = () => {
-    navigate('/forgototp'); 
+    if (!email.trim()) {  
+      setShowError(true);
+      return; 
+    }
+    navigate('/forgototp', { state: { email } });
   };
 
   return (
@@ -29,16 +36,25 @@ const ForgotPassword = () => {
         <label htmlFor="email">Gmail</label>
         <div className="input-box">
           <span>📧</span>
-          <input type="email" id="email" placeholder="mario@phamatin.com" />
+          <input
+            type="email"
+            id="email"
+            placeholder="mario@phamatin.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
 
         <button onClick={handleContinue}>Continue</button>
         <a href="/signin" className="back">Back to Sign in</a>
       </div>
 
-      {/* <div className="image-section">
-        {/* <img src={sideImage} alt="Person Illustration" /> 
-      </div> */}
+      {showError && (
+        <ErrorPopup
+          message="Please enter your email!"
+          onClose={() => setShowError(false)}
+        />
+      )}
     </div>
   );
 };

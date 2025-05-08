@@ -2,12 +2,16 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Forgotpassword.css'; 
 import formImage from '../assets/password.png'; 
+import 'font-awesome/css/font-awesome.min.css';
+import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
 
 const SetNewPassword = () => {
   const [password, setPassword] = useState("");
   const [passwordStrength, setPasswordStrength] = useState("");
   const [passwordHints, setPasswordHints] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const validatePasswordStrength = (password) => {
     const hints = [];
@@ -25,7 +29,7 @@ const SetNewPassword = () => {
       hints.push("Add at least one number (0-9)");
     }
     if (!/[@$!%*?#&]/.test(password)) {
-      hints.push("Add at least one special character (@$!%*?#&)");
+      hints.push("Add at least one special character (@$!%*?#&) ");
     }
 
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
@@ -49,10 +53,22 @@ const SetNewPassword = () => {
     setPasswordStrength(strength);
     setPasswordHints(hints);
   };
-  const navigate = useNavigate(); 
+
+  const navigate = useNavigate();
 
   const handleContinue = () => {
-    navigate('/passwordupdate'); 
+    if (!password) {
+      setErrorMessage("Password cannot be empty");
+      setShowErrorPopup(true);
+      return;
+    }
+
+    if (passwordStrength !== 'strong') {
+      setErrorMessage("Password is not strong enough. Please meet all requirements.");
+      setShowErrorPopup(true);
+      return;
+    }
+    navigate('/passwordupdate');
   };
 
   return (
@@ -74,22 +90,20 @@ const SetNewPassword = () => {
         <label htmlFor="new-password">New Password</label>
         <div className="input-box">
           <span>🔒</span>
-         
-<input
-  type={showPassword ? "text" : "password"}
-  id="new-password"
-  placeholder="Enter new password"
-  value={password}
-  onChange={handlePasswordChange}
-/>
-<span
-    className="toggle-password"
-    onClick={() => setShowPassword((prev) => !prev)}
-    style={{ cursor: 'pointer' }}
-  >
-    {showPassword ? "🙈" : "👁️"}
-  </span>
-
+          <input
+            type={showPassword ? "text" : "password"}
+            id="new-password"
+            placeholder="Enter new password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <span
+            className="toggle-password"
+            onClick={() => setShowPassword((prev) => !prev)}
+            style={{ cursor: 'pointer' }}
+          >
+            <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+          </span>
         </div>
 
         {/* Password strength bar */}
@@ -120,10 +134,13 @@ const SetNewPassword = () => {
         <button onClick={handleContinue}>Set new password</button>
         <a href="/signin" className="back">Back to Sign in</a>
       </div>
-
-      {/* <div className="image-section"> */}
-        {/* Optional side image */}
-      {/* </div> */}
+      
+      {showErrorPopup && (
+        <ErrorPopup
+          message={errorMessage}
+          onClose={() => setShowErrorPopup(false)}
+        />
+      )}
     </div>
   );
 };
