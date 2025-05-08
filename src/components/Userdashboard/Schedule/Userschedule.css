@@ -85,7 +85,7 @@
 }
 
 
-.dropdown-menu {
+.dropdown-menu-user {
   position: absolute;
   right: 0;
   top: 30px;
@@ -96,7 +96,7 @@
   width: 100px;
 }
 
-.dropdown-menu button {
+.dropdown-menu-user button {
   display: block;
   width: 100%;
   padding: 8px;
@@ -106,7 +106,7 @@
   text-align: left;
 }
 
-.dropdown-menu button:hover {
+.dropdown-menu-user button:hover {
   background: #f0f0f0;
 }
 
@@ -334,9 +334,13 @@
   border: none;
   cursor: pointer;
   font-size: 18px;
+  color:#333;
+}
+.menu-btn:hover {
+  cursor:pointer;
 }
 
-.dropdown-menu {
+.dropdown-menu-user {
   position: absolute;
   right: 0;
   top: 30px;
@@ -348,7 +352,7 @@
   transition: all 0.3s ease;
 }
 
-.dropdown-menu button {
+.dropdown-menu-user button {
   display: block;
   width: 100%;
   padding: 8px;
@@ -358,7 +362,7 @@
   text-align: left;
 }
 
-.dropdown-menu button:hover {
+.dropdown-menu-user button:hover {
   background: #f0f0f0;
 }
 
