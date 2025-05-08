@@ -136,7 +136,7 @@ const SignIn = () => {
 
 
             <div className="options-container">
-              <div className="checkbox-container">
+              {/* <div className="checkbox-container">
                 <input
                   type="checkbox"
                   name="rememberMe"
@@ -146,7 +146,7 @@ const SignIn = () => {
                   className="checkbox"
                 />
                 <label htmlFor="rememberMe">Remember me</label>
-              </div>
+              </div> */}
               <a onClick={() => navigate('/forgotpassword')} className="forgot-password">Forgot password?</a>
             </div>
 
