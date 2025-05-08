@@ -42,9 +42,9 @@ const Userdashboard = () => {
               type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
               amount: `${pickup.amount} ${pickup.unit}`,
               status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
-              payment: "", // Placeholder, since it's not in the API
+              payment: "", 
             }))
-            .slice(0, 5); // Take only the first 5 pickups
+            .slice(0, 5); 
 
           setRecentPickups(transformedData);
         }
@@ -61,6 +61,7 @@ const Userdashboard = () => {
     setPopupMessage(
       `New pickup request added successfully!\nSubscription: ${newPickup.subscription}.\nPlease select a payment method.`
     );
+    
     setShowPopup(true);
   };
 
