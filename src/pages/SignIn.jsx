@@ -115,29 +115,25 @@ const SignIn = () => {
               />
               <label htmlFor="email" className="label">Email</label>
             </div>
-
             <div className="input-group">
-              <div className="password-container">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  id="password"
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="input"
-                  required
-                />
-                <span
-                  className="toggle-password"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
-                </span>
-              </div>
-              <label htmlFor="password" className="label">Password</label>
-            </div>
+  <div className="password-container">
+    <input
+      type={showPassword ? "text" : "password"}
+      name="password"
+      id="password"
+      placeholder="Enter your password"
+      value={formData.password}
+      onChange={handleChange}
+      className="input"
+      required
+    />
+    <label htmlFor="password" className="label">Password</label>
+    <span className="toggle-password" onClick={() => setShowPassword(prev => !prev)}>
+      <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+    </span>
+  </div>
+</div>
+
 
             <div className="options-container">
               <div className="checkbox-container">

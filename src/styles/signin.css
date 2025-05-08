@@ -86,6 +86,7 @@ html, body {
 .input {
   width: 100%;
   padding: 16px;
+  padding-right: 40px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 18px;
