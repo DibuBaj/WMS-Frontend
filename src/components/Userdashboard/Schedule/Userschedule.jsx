@@ -221,9 +221,9 @@ const Userschedule = () => {
               <td>{row.amount}</td>
               <td className="status-container">
                 <span className={row.status === "Pending" ? "status-pending" : "status-completed"}>{row.status}</span>
-                <button className="menu-btn" onClick={() => setMenuOpen(menuOpen === row.id ? null : row.id)}>⋮</button>
+                <p className="menu-btn" onClick={() => setMenuOpen(menuOpen === row.id ? null : row.id)}>⋮</p>
                 {menuOpen === row.id && (
-                  <div className="dropdown-menu">
+                  <div className="dropdown-menu-user">
                     <button onClick={() => handleEdit(row)}>Edit</button>
                     <button onClick={() => handleDelete(row.id)}>Cancel</button>
                   </div>
