@@ -28,8 +28,6 @@ const Header = () => {
         console.error("Failed to parse user:", err);
       }
     }
-
-    // Set greeting based on the time of day
     const currentHour = new Date().getHours();
     if (currentHour < 12) {
       setGreeting("Good Morning");
@@ -51,25 +49,25 @@ const Header = () => {
   const handleLogout = async () => {
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
-
+  
     try {
       await axios.post("http://localhost:3000/api/auth/logout", {}, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
-
+  
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-
-      setTimeout(() => navigate("/signin"));
+      setTimeout(() => navigate("/signin"), 3000);
     } catch (err) {
       console.error("Logout failed:", err);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      setTimeout(() => navigate("/signin"));
+      setTimeout(() => navigate("/signin"), 1500);
     }
   };
+  
 
   useEffect(() => {
     const handleClickOutside = (event) => {

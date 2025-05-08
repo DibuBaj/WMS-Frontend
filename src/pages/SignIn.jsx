@@ -6,6 +6,7 @@ import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
 import "../styles/signin.css";
 import Logo from "../assets/Logo.svg";
 import Background from "../assets/Background.png";
+import 'font-awesome/css/font-awesome.min.css'; 
 
 const ADMIN_EMAIL = "greenbinpvtltd@gmail.com";
 const ADMIN_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTY0YzY3N2Y0MTQ0MmJmMWY2NmU0OCIsImlhdCI6MTc0NjI5MTg3NCwiZXhwIjoxNzQ4ODgzODc0fQ.RnHnhrrQ3APBEaA7qSPNpVutXsUo89A4SeAAXqUubSU";
@@ -21,6 +22,7 @@ const SignIn = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false); 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -39,18 +41,16 @@ const SignIn = () => {
         email: formData.email,
         password: formData.password,
       });
-
-      // Store the token
       localStorage.setItem("token", response.data.token);
       
-      // Store user data with email
+    
       const userData = {
         ...response.data.user,
-        email: formData.email // Ensure email is included
+        email: formData.email 
       };
       localStorage.setItem("user", JSON.stringify(userData));
 
-      // If it's an admin user, store the admin token
+    
       if (formData.email === ADMIN_EMAIL) {
         localStorage.setItem("adminToken", ADMIN_TOKEN);
       }
@@ -58,7 +58,7 @@ const SignIn = () => {
       setPopupMessage("Login successful! Redirecting...");
       setShowSuccessPopup(true);
 
-      // Redirect based on user type
+      
       setTimeout(() => {
         if (formData.email === ADMIN_EMAIL) {
           navigate("/admindashboard");
@@ -117,16 +117,25 @@ const SignIn = () => {
             </div>
 
             <div className="input-group">
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                className="input"
-                required
-              />
+              <div className="password-container">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  id="password"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="input"
+                  required
+                />
+                <span
+                  className="toggle-password"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`} />
+                </span>
+              </div>
               <label htmlFor="password" className="label">Password</label>
             </div>
 
