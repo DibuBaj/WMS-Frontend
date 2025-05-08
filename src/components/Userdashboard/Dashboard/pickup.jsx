@@ -105,7 +105,8 @@ const Pickup = ({ addPickup }) => {
       );
 
       console.log("Pickup Scheduled Successfully:", response.data);
-      addPickup(response.data);
+      addPickup(payload);
+
 
       setFormData({
         address: '',
