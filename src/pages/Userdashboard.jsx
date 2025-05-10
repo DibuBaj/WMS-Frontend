@@ -22,39 +22,50 @@ const Userdashboard = () => {
   const token = localStorage.getItem("token");
 
   // Fetch recent pickups on mount
-  useEffect(() => {
-    const fetchRecentPickups = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/pickups/history", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+ useEffect(() => {
+  const fetchRecentPickups = async () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
 
-        const result = await response.json();
-
-        if (result.message === "Pickup history retrieved successfully for user") {
-          const transformedData = result.pickups
-            .map((pickup) => ({
-              date: new Date(pickup.pickupDateTime).toLocaleString(),
-              address: pickup.address, // Address from the API response
-              type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
-              amount: `${pickup.amount} ${pickup.unit}`,
-              status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
-              payment: "", 
-            }))
-            .slice(0, 5); 
-
-          setRecentPickups(transformedData);
-        }
-      } catch (err) {
-        console.error("Error fetching recent pickups:", err);
+      if (!parsedUser?.id || !token) {
+        console.warn("Missing user ID or token.");
+        return;
       }
-    };
 
-    fetchRecentPickups();
-  }, [token]);
+      const response = await fetch(`http://localhost:3000/api/pickups/history?userId=${parsedUser.id}`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (result.pickups && Array.isArray(result.pickups)) {
+        const transformedData = result.pickups
+          .map((pickup) => ({
+            date: new Date(pickup.pickupDateTime).toLocaleString(),
+            address: pickup.address,
+            type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
+            amount: `${pickup.amount} ${pickup.unit}`,
+            status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
+            payment: "", // Add logic here if payment info exists
+          }))
+          .slice(0, 5); // Only latest 5
+
+        setRecentPickups(transformedData);
+      } else {
+        console.warn("No pickups found in response.");
+      }
+    } catch (err) {
+      console.error("Error fetching recent pickups:", err);
+    }
+  };
+
+  fetchRecentPickups();
+}, [token]);
 
   const addPickup = (newPickup) => {
     setCurrentPickup(newPickup);

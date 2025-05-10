@@ -20,22 +20,28 @@ const Userschedule = () => {
   const token = localStorage.getItem("token");
 
   // Fetch data from API on component mount
-  useEffect(() => {
-    const fetchPickupsHistory = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/pickups/history", {
+useEffect(() => {
+  const fetchPickupsHistory = async () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+
+      if (parsedUser?.id && token) {
+        const response = await fetch(`http://localhost:3000/api/pickups/history?userId=${parsedUser.id}`, {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
           },
         });
+
         const result = await response.json();
 
-        if (result.message === "Pickup history retrieved successfully for user") {
+        if (result.message === "Pickup history retrieved successfully" || result.pickups) {
           const transformedData = result.pickups.map((pickup) => ({
             id: pickup._id,
             date: new Date(pickup.pickupDateTime).toLocaleString(),
-            location: pickup.address, // Directly use address from the response
+            location: pickup.address,
             type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
             amount: `${pickup.amount} ${pickup.unit}`,
             status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
@@ -44,15 +50,20 @@ const Userschedule = () => {
         } else {
           showError("Failed to load pickup history.");
         }
-      } catch (err) {
-        showError("An error occurred while fetching the data.");
-      } finally {
-        setLoading(false);
+      } else {
+        showError("User not found or not authenticated.");
       }
-    };
+    } catch (err) {
+      console.error(err);
+      showError("An error occurred while fetching the data.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchPickupsHistory();
-  }, [token]);
+  fetchPickupsHistory();
+}, [token]);
+
 
   const handleEdit = (item) => {
     setEditItem(item.id);
