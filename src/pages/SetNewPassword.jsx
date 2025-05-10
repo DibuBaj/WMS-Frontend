@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // 🟢 added useLocation
 import '../styles/Forgotpassword.css'; 
 import formImage from '../assets/password.png'; 
 import 'font-awesome/css/font-awesome.min.css';
@@ -12,6 +12,10 @@ const SetNewPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { email, resetToken } = location.state || {}; // 🟢 get email and resetToken from previous page
 
   const validatePasswordStrength = (password) => {
     const hints = [];
@@ -29,7 +33,7 @@ const SetNewPassword = () => {
       hints.push("Add at least one number (0-9)");
     }
     if (!/[@$!%*?#&]/.test(password)) {
-      hints.push("Add at least one special character (@$!%*?#&) ");
+      hints.push("Add at least one special character (@$!%*?#&)");
     }
 
     const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
@@ -54,9 +58,13 @@ const SetNewPassword = () => {
     setPasswordHints(hints);
   };
 
-  const navigate = useNavigate();
+  const handleContinue = async () => {
+    if (!email || !resetToken) {
+      setErrorMessage("Missing email or reset token. Please restart the password reset process.");
+      setShowErrorPopup(true);
+      return;
+    }
 
-  const handleContinue = () => {
     if (!password) {
       setErrorMessage("Password cannot be empty");
       setShowErrorPopup(true);
@@ -68,7 +76,33 @@ const SetNewPassword = () => {
       setShowErrorPopup(true);
       return;
     }
-    navigate('/passwordupdate');
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          resetToken: resetToken,
+          newPassword: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to reset password');
+      }
+
+      // ✅ Password reset successful → navigate
+      navigate('/passwordupdate');
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      setErrorMessage(error.message);
+      setShowErrorPopup(true);
+    }
   };
 
   return (
@@ -131,6 +165,7 @@ const SetNewPassword = () => {
             </ul>
           </div>
         )}
+
         <button onClick={handleContinue}>Set new password</button>
         <a href="/signin" className="back">Back to Sign in</a>
       </div>
@@ -146,3 +181,4 @@ const SetNewPassword = () => {
 };
 
 export default SetNewPassword;
+

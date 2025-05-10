@@ -8,13 +8,38 @@ const ForgotPassword = () => {
   const navigate = useNavigate(); 
   const [email, setEmail] = useState('');
   const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // to store dynamic error message
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!email.trim()) {  
+      setErrorMessage("Please enter your email!");
       setShowError(true);
       return; 
     }
-    navigate('/forgototp', { state: { email } });
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send OTP');
+      }
+
+      // ✅ API success → navigate to OTP page
+      navigate('/forgototp', { state: { email } });
+
+    } catch (error) {
+      console.error('Error sending OTP:', error);
+      setErrorMessage(error.message);
+      setShowError(true);
+    }
   };
 
   return (
@@ -51,7 +76,7 @@ const ForgotPassword = () => {
 
       {showError && (
         <ErrorPopup
-          message="Please enter your email!"
+          message={errorMessage}
           onClose={() => setShowError(false)}
         />
       )}

@@ -11,7 +11,8 @@ const ForgotOtp = () => {
   const email = location.state?.email || 'your email';
 
   const inputRefs = Array.from({ length: 6 }, () => useRef(null));
-  const [error, setError] = useState(false); 
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('Please fill in all OTP fields.');
 
   const handleInput = (e, index) => {
     const value = e.target.value;
@@ -31,25 +32,49 @@ const ForgotOtp = () => {
     }
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const otp = inputRefs.map((ref) => ref.current.value).join('');
-    
-    if (otp.length === 6) {
-      navigate('/setpassword');
-    } else {
-      setError(true); 
+
+    if (otp.length !== 6) {
+      setErrorMessage('Please fill in all OTP fields.');
+      setError(true);
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/api/auth/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Invalid OTP');
+      }
+
+      // ✅ OTP verified → navigate to set password
+      navigate('/setpassword', { state: { email, resetToken: data.resetToken } });
+
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      setErrorMessage(error.message);
+      setError(true);
     }
   };
 
   const closeErrorPopup = () => {
-    setError(false); 
+    setError(false);
   };
 
   return (
     <div className="forgot-password-container">
       {/* Error Popup */}
-      {error && <ErrorPopup message="Please fill in all OTP fields." onClose={closeErrorPopup} />}
-      
+      {error && <ErrorPopup message={errorMessage} onClose={closeErrorPopup} />}
+
       <div className="forms-section">
         <div className="progress-bar-wrapper">
           <h4>Check your mail</h4>
