@@ -2,6 +2,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useState } from "react";
 // Removed Leaf, Box imports as they are not in the design
 import { Search } from "lucide-react"; 
@@ -24,12 +25,17 @@ import React, { useState, useEffect } from "react";
 import { Search, Filter, X } from "lucide-react";
 import axios from "axios";
 >>>>>>> 67f4213 (Pickup Management)
+=======
+import React, { useState } from "react";
+import { Search } from "lucide-react";
+>>>>>>> 3adc850 (Merge Fixes)
 import AdminLayout from "../Navbar/AdminLayout";
 >>>>>>> e1879a9 (Admin Navbar)
 import "./PickupManagement.css";
 
 const PickupManagement = () => {
   const [activePage, setActivePage] = useState(1);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -74,11 +80,18 @@ export default function PickupManagement() {
     }
   });
 >>>>>>> 67f4213 (Pickup Management)
+=======
+>>>>>>> 3adc850 (Merge Fixes)
   const itemsPerPage = 7;
+  const totalEntries = 24;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   // Sample data
 >>>>>>> e1879a9 (Admin Navbar)
+=======
+  // Sample data
+>>>>>>> 3adc850 (Merge Fixes)
   const pickupData = [
     {
       id: 1,
@@ -122,6 +135,7 @@ export default function PickupManagement() {
     },
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     {
       id: 6,
 <<<<<<< HEAD
@@ -129,10 +143,15 @@ export default function PickupManagement() {
     {
       id: 6,
 >>>>>>> da5f14c (updated the codes)
+=======
+    {
+      id: 6,
+>>>>>>> 3adc850 (Merge Fixes)
       date: "Jan 12, 2025 9:00am",
       location: "Patan",
       type: "Recyclable",
       user: "Sita Rai",
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       date: "Jan 13, 2025 8:30am",
@@ -142,20 +161,26 @@ export default function PickupManagement() {
 >>>>>>> 4a79a34 (Pickup)
 =======
 >>>>>>> da5f14c (updated the codes)
+=======
+>>>>>>> 3adc850 (Merge Fixes)
       status: "Completed",
     },
     {
       id: 7,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> da5f14c (updated the codes)
+=======
+>>>>>>> 3adc850 (Merge Fixes)
       date: "Jan 11, 2025 7:15am",
       location: "Bhaktapur",
       type: "Organic",
       user: "Hari Lama",
       status: "Pending",
     },
+<<<<<<< HEAD
 <<<<<<< HEAD
     // Add more entries if needed to test pagination beyond page 1
 <<<<<<< HEAD
@@ -268,12 +293,15 @@ export default function PickupManagement() {
     setSearchQuery("");
   };
 >>>>>>> 67f4213 (Pickup Management)
+=======
+  ];
+>>>>>>> 3adc850 (Merge Fixes)
 
   // Calculate pagination details
   const totalPages = Math.ceil(totalEntries / itemsPerPage);
   const startIndex = (activePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentPickupData = filteredData.slice(startIndex, endIndex);
+  const currentPickupData = pickupData.slice(0, itemsPerPage);
   const showingStart = totalEntries > 0 ? startIndex + 1 : 0;
   const showingEnd = Math.min(endIndex, totalEntries);
 
@@ -294,111 +322,21 @@ export default function PickupManagement() {
   // Generate page numbers to display
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
-  if (loading) {
-    return (
-      <AdminLayout>
-        <div className="pickup-content card">
-          <div className="loading">Loading pickup data...</div>
-        </div>
-      </AdminLayout>
-    );
-  }
-
-  if (error) {
-    return (
-      <AdminLayout>
-        <div className="pickup-content card">
-          <div className="error">{error}</div>
-        </div>
-      </AdminLayout>
-    );
-  }
-
   return (
     <AdminLayout>
       <div className="pickup-content card">
-        {/* Header: Title, Search and Filter */}
+        {/* Header: Title and Search */}
         <div className="pickup-header">
           <h2 className="pickup-title">Pickup Management</h2>
-          <div className="header-controls">
-            <div className="search-wrapper">
-              <Search className="search-icon" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search pickups..."
-                className="search-input"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <button 
-              className="filter-toggle"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              <Filter size={18} />
-              Filters
-            </button>
+          <div className="search-wrapper">
+            <Search className="search-icon" size={18} />
+            <input 
+              type="text" 
+              placeholder="Search routes..."
+              className="search-input"
+            />
           </div>
         </div>
-
-        {/* Filter Panel */}
-        {showFilters && (
-          <div className="filter-panel">
-            <div className="filter-group">
-              <label>Waste Type</label>
-              <select 
-                value={filters.wasteType}
-                onChange={(e) => handleFilterChange('wasteType', e.target.value)}
-              >
-                <option value="">All Types</option>
-                {wasteTypes.map(type => (
-                  <option key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label>Status</label>
-              <select 
-                value={filters.status}
-                onChange={(e) => handleFilterChange('status', e.target.value)}
-              >
-                <option value="">All Status</option>
-                {statuses.map(status => (
-                  <option key={status} value={status}>
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="filter-group date-range">
-              <label>Date Range</label>
-              <div className="date-inputs">
-                <input
-                  type="date"
-                  value={filters.dateRange.start}
-                  onChange={(e) => handleDateRangeChange('start', e.target.value)}
-                  placeholder="Start Date"
-                />
-                <span>to</span>
-                <input
-                  type="date"
-                  value={filters.dateRange.end}
-                  onChange={(e) => handleDateRangeChange('end', e.target.value)}
-                  placeholder="End Date"
-                />
-              </div>
-            </div>
-
-            <button className="clear-filters" onClick={clearFilters}>
-              <X size={16} />
-              Clear Filters
-            </button>
-          </div>
-        )}
 
         {/* Table */}
         <div className="pickup-table-container">
@@ -408,35 +346,23 @@ export default function PickupManagement() {
             <div className="table-cell">Location</div>
             <div className="table-cell">Type</div>
             <div className="table-cell">User</div>
-            <div className="table-cell">Amount</div>
             <div className="table-cell">Status</div>
           </div>
           
           {/* Data Rows */}
-          {currentPickupData.length > 0 ? (
-            currentPickupData.map((pickup) => (
-              <div className="table-row" key={pickup._id}>
-                <div className="table-cell">
-                  {new Date(pickup.pickupDateTime).toLocaleString()}
-                </div>
-                <div className="table-cell">{pickup.address}</div>
-                <div className="table-cell">{pickup.wasteType}</div>
-                <div className="table-cell">
-                  {pickup.userId ? pickup.userId.fullName : "Guest"}
-                </div>
-                <div className="table-cell">
-                  {pickup.amount} {pickup.unit}
-                </div>
-                <div className="table-cell">
-                  <span className={`status-badge status-${pickup.status.toLowerCase()}`}>
-                    {pickup.status}
-                  </span>
-                </div>
+          {currentPickupData.map((pickup) => (
+            <div className="table-row" key={pickup.id}>
+              <div className="table-cell">{pickup.date}</div>
+              <div className="table-cell">{pickup.location}</div>
+              <div className="table-cell">{pickup.type}</div>
+              <div className="table-cell">{pickup.user}</div>
+              <div className="table-cell">
+                <span className={`status-badge status-${pickup.status.toLowerCase()}`}>
+                  {pickup.status}
+                </span>
               </div>
-            ))
-          ) : (
-            <div className="no-results">No pickups found matching your criteria</div>
-          )}
+            </div>
+          ))}
         </div>
 
 <<<<<<< HEAD

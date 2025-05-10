@@ -8,53 +8,12 @@ const Collection = () => {
     type: '',
     amount: '',
     notes: '',
-    status: 'pending',
-    route: ''
+    status: 'pending'
   });
-  const [routes, setRoutes] = useState([]);
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-
-  useEffect(() => {
-    const fetchRoutes = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setError("Please log in to access this page.");
-          return;
-        }
-
-        const response = await fetch('http://localhost:3000/api/route/get-routes', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch routes');
-        }
-
-        const data = await response.json();
-        if (data.success) {
-          // Only show routes that are in Scheduled or No Schedule status
-          const availableRoutes = data.data.filter(route => 
-            route.status === 'Scheduled' || route.status === 'No Schedule'
-          );
-          setRoutes(availableRoutes);
-          setError('');
-        } else {
-          throw new Error(data.message || 'Failed to load routes');
-        }
-      } catch (err) {
-        console.error('Error fetching routes:', err);
-        setError(err.message || 'Failed to load routes. Please try again.');
-      }
-    };
-    fetchRoutes();
-  }, []);
 
   // Check for token on component mount
   useEffect(() => {
@@ -104,8 +63,8 @@ const Collection = () => {
       return;
     }
 
-    const { type, amount, notes, status, route } = newCollection;
-    if (!type || !amount || !notes || !status || !route) {
+    const { type, amount, notes, status } = newCollection;
+    if (!type || !amount || !notes || !status) {
       setError('All fields are required.');
       return;
     }
@@ -122,8 +81,7 @@ const Collection = () => {
           type,
           amount: Number(amount),
           notes,
-          status,
-          route
+          status
         })
       });
 
@@ -132,7 +90,7 @@ const Collection = () => {
         throw new Error(result.message || 'Failed to create collection');
       }
 
-      setNewCollection({ type: '', amount: '', notes: '', status: 'pending', route: '' });
+      setNewCollection({ type: '', amount: '', notes: '', status: 'pending' });
       setShowModal(false);
       setError('');
       fetchCollections();
@@ -196,19 +154,6 @@ const Collection = () => {
                   placeholder="Notes"
                   required
                 />
-                <select
-                  className="modal-input"
-                  value={newCollection.route}
-                  onChange={e => setNewCollection({ ...newCollection, route: e.target.value })}
-                  required
-                >
-                  <option value="">Select a route</option>
-                  {routes.map(route => (
-                    <option key={route._id} value={route._id}>
-                      {route.routeName} ({route.routeId}) - {route.status}
-                    </option>
-                  ))}
-                </select>
                 <select
                   className="modal-input"
                   value={newCollection.status}

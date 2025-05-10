@@ -59,7 +59,6 @@ const Header = () => {
       console.error("Logout failed:", err);
     } finally {
       localStorage.removeItem("token");
-      localStorage.removeItem("adminToken");
       localStorage.removeItem("user");
       setTimeout(() => navigate("/signin"), 1000); // Give a small delay for animation if needed
     }
