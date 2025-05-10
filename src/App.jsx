@@ -40,7 +40,7 @@ function AdminRoute({ children }) {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   if (!token || user.email !== ADMIN_EMAIL) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/userdashboard" replace />;
   }
 
   return children;

@@ -1,4 +1,4 @@
-/* ===== Main Layout ===== */
+/* Main Layout - Inherit from parent or define if needed */
 .pickup-container {
   display: flex;
   /* min-height: 100vh; */
@@ -8,24 +8,33 @@
 
 /* Content Area - Apply card styling */
 .pickup-content {
-  margin: 30px;
-  padding: 25px 30px;
+  /* Adjust margin-left based on actual Sidebarr width */
+  margin-left: 10px; 
+  margin-top: 30px; /* Consistent margin */
+  margin-right: 30px; /* Add margin to the right */
+  margin-bottom: 30px; /* Add margin at the bottom */
+  /* Restore full padding to the card */
+  padding: 25px 30px; 
+  width: calc(100% - 250px - 40px); /* Adjust width based on Sidebarr and margins */
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07); /* Subtle shadow */
   display: flex;
   flex-direction: column;
-  /* height: calc(100vh - 60px);  */
-  overflow: hidden; /* Prevent content from overflowing */
 }
 
-/* ===== Header Section ===== */
+/* Pickup Header: Title and Search */
 .pickup-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-shrink: 0; /* Prevent header from shrinking */
+  align-items: center; /* Use center alignment for vertical centering */
+  /* Remove padding-top, it's handled by parent */
+  padding-top: 0; 
+  /* Remove padding-bottom and border */
+  padding-bottom: 0; 
+  border-bottom: none; 
+  /* Control all space after header with margin */
+  margin-bottom: 30px; /* Adjust as needed */
 }
 
 .pickup-title {
@@ -35,154 +44,55 @@
   color: #333;
 }
 
-/* ===== Search Styles ===== */
+/* Search Wrapper */
 .search-wrapper {
   position: relative;
-  max-width: 300px; /* Increased width for better usability */
-  margin-top: 3px;
+  max-width: 200px; /* Adjust width as needed */
+  /* Add small top margin to nudge down */
+  margin-top: 3px; /* Adjust this value as needed */
 }
 
 .search-icon {
   position: absolute;
-  left: 10px;
-  top: 50%;
+  left: 2px; 
+  top: 46%;
   transform: translateY(-50%);
-  color: #666;
-  pointer-events: none;
+  color: #ccc; /* Even lighter icon */
+  pointer-events: none; 
 }
 
 .search-input {
   width: 100%;
-  padding: 10px 10px 10px 35px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  padding: 9px 5px 9px 20px; /* Slightly increased vertical padding */
+  border: 1px solid #eee; /* Even lighter border */
+  border-radius: 8px; 
   font-size: 14px;
   outline: none;
-  background-color: #fff;
-  transition: all 0.3s ease;
+  background-color: #fff; /* White background */
 }
-
 .search-input::placeholder {
-  color: #999;
+  color: #ccc; /* Lighter placeholder */
 }
-
 .search-input:focus {
-  border-color: #395849;
-  box-shadow: 0 0 0 2px rgba(57, 88, 73, 0.1);
+  border-color: #ddd; /* Slightly darker border on focus */
+  box-shadow: none; /* Remove focus shadow */
 }
 
-/* ===== Filter Styles ===== */
-.filter-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  color: #666;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
 
-.filter-toggle:hover {
-  background-color: #eee;
-  border-color: #ccc;
-}
-
-.filter-panel {
-  background-color: #f9f9f9;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.filter-group label {
-  font-size: 13px;
-  color: #666;
-  font-weight: 500;
-}
-
-.filter-group select,
-.filter-group input {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 14px;
-  color: #333;
-  background-color: white;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.filter-group select:focus,
-.filter-group input:focus {
-  border-color: #395849;
-  box-shadow: 0 0 0 2px rgba(57, 88, 73, 0.1);
-}
-
-.date-range .date-inputs {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.date-range input {
-  flex: 1;
-}
-
-.date-range span {
-  color: #666;
-  font-size: 14px;
-}
-
-.clear-filters {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  color: #666;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  align-self: flex-end;
-}
-
-.clear-filters:hover {
-  background-color: #f5f5f5;
-  border-color: #ccc;
-}
-
-/* ===== Table Styles ===== */
+/* Table Container */
 .pickup-table-container {
-  flex: 1;
-  overflow-y: auto; /* Enable vertical scrolling */
-  margin-bottom: 20px; /* Space before pagination */
+  flex-grow: 1; /* Allow table to take available space */
+  /* Remove padding-top; space is now handled by header's margin-bottom */
 }
 
 /* Table Row Styles (using divs) */
 .table-row {
   display: flex;
-  padding: 14px 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 14px 0; /* Vertical padding */
+  border-bottom: 1px solid #f0f0f0; /* Lighter border */
   font-size: 13px;
   color: #555;
-  align-items: center;
-  min-width: 100%; /* Ensure rows take full width */
+  align-items: center; /* Vertically align content */
 }
 .table-row:last-child {
   border-bottom: none;
@@ -201,22 +111,21 @@
 /* Table Cell Styles */
 .table-cell {
   flex: 1;
-  padding: 0 10px;
+  padding: 0 10px; /* Horizontal padding */
   text-align: left;
-  white-space: nowrap;
+  white-space: nowrap; /* Prevent wrapping */
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: ellipsis; /* Add ellipsis if content overflows */
 }
-
 /* Adjust flex basis for column widths */
-.table-cell:nth-child(1) { flex-basis: 20%; } /* Date */
+.table-cell:nth-child(1) { flex-basis: 25%; } /* Date */
 .table-cell:nth-child(2) { flex-basis: 20%; } /* Location */
 .table-cell:nth-child(3) { flex-basis: 15%; } /* Type */
 .table-cell:nth-child(4) { flex-basis: 20%; } /* User */
-.table-cell:nth-child(5) { flex-basis: 10%; } /* Amount */
-.table-cell:nth-child(6) { flex-basis: 15%; } /* Status */
+.table-cell:nth-child(5) { flex-basis: 20%; text-align: center; } /* Status */
 
-/* ===== Status Badge Styles ===== */
+
+/* Status Badges (reuse from AdminDashboard.css if defined globally, or redefine here) */
 .status-badge {
   display: inline-block;
   padding: 4px 10px;
@@ -237,15 +146,15 @@
 }
 /* Add other status styles if needed (e.g., in-progress, scheduled) */
 
-/* ===== Pagination Styles ===== */
+
+/* Pagination */
 .pickup-pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
-  flex-shrink: 0; /* Prevent pagination from shrinking */
-  background-color: white; /* Ensure pagination is visible */
+  padding-top: 20px; /* Space above pagination */
+  margin-top: auto; /* Push pagination to the bottom */
+  border-top: 1px solid #f0f0f0; /* Separator */
 }
 
 .pagination-info {
@@ -295,66 +204,4 @@
 /* Remove old table styles if they exist */
 .pickup-table {
   display: none; 
-}
-
-/* Header Controls */
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-/* ===== Utility Classes ===== */
-.no-results {
-  text-align: center;
-  padding: 40px 20px;
-  color: #666;
-  font-size: 14px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  margin: 20px 0;
-}
-
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 14px;
-}
-
-.error {
-  text-align: center;
-  padding: 40px;
-  color: #dc3545;
-  font-size: 14px;
-}
-
-/* ===== Responsive Styles ===== */
-@media (max-width: 768px) {
-  .pickup-content {
-    margin: 15px;
-    padding: 15px;
-  }
-
-  .filter-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .header-controls {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-wrapper {
-    max-width: 100%;
-  }
-
-  .table-cell {
-    font-size: 12px;
-  }
-
-  .pagination-controls {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
 }
