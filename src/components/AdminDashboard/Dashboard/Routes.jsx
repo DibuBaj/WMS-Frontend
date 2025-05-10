@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Search, Edit2, Play, Plus } from "lucide-react";
+import { Search, Edit2, Play, Plus, Trash } from "lucide-react";
 import AdminLayout from "../Navbar/AdminLayout";
 import "./Routes.css";
 
@@ -48,7 +48,6 @@ const Routes = () => {
         }
 
         const result = await response.json();
-        
         if (result.success) {
           setRoutes(result.data);
         } else {
@@ -75,7 +74,6 @@ const Routes = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`http://localhost:3000/api/route/update-route/${editingRoute.routeId}`, {
@@ -92,9 +90,7 @@ const Routes = () => {
       });
 
       const result = await response.json();
-
       if (result.success) {
-        // Update the routes list with the edited route
         setRoutes(routes.map(route => 
           route.routeId === editingRoute.routeId ? result.data : route
         ));
@@ -109,7 +105,6 @@ const Routes = () => {
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:3000/api/route/add-route', {
@@ -122,7 +117,6 @@ const Routes = () => {
       });
 
       const result = await response.json();
-
       if (result.success) {
         setRoutes([result.data, ...routes]);
         setShowCreateModal(false);
@@ -142,8 +136,6 @@ const Routes = () => {
   const handleStartRoute = async (route) => {
     try {
       const token = localStorage.getItem('token');
-      
-      // Start the route
       const response = await fetch(`http://localhost:3000/api/route/start-route/${route.routeId}`, {
         method: 'POST',
         headers: {
@@ -153,15 +145,12 @@ const Routes = () => {
       });
 
       const result = await response.json();
-
       if (result.success) {
-        // Update local state with the route in "In Progress" status
         const updatedRoutes = routes.map(r => 
-          r.routeId === route.routeId ? result.data : r
+          r.routeId === route.routeId ? result.data.route : r
         );
         setRoutes(updatedRoutes);
 
-        // After 5 seconds, update to Completed
         setTimeout(async () => {
           try {
             const completeResponse = await fetch(`http://localhost:3000/api/route/update-route/${route.routeId}`, {
@@ -177,9 +166,7 @@ const Routes = () => {
             });
 
             const completeResult = await completeResponse.json();
-
             if (completeResult.success) {
-              // Update local state with the completed route
               setRoutes(prevRoutes => 
                 prevRoutes.map(r => 
                   r.routeId === route.routeId ? completeResult.data : r
@@ -200,7 +187,30 @@ const Routes = () => {
     }
   };
 
-  // Filtered data based on search
+  const handleDeleteRoute = async (routeId) => {
+    if (!window.confirm("Are you sure you want to delete this route?")) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`http://localhost:3000/api/route/delete-route/${routeId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setRoutes(routes.filter(route => route.routeId !== routeId));
+      } else {
+        setError(result.message || 'Failed to delete route');
+      }
+    } catch (err) {
+      setError('Error deleting route: ' + err.message);
+    }
+  };
+
   const filteredRoutes = routes.filter(
     (route) =>
       route.routeId.toLowerCase().includes(search.toLowerCase()) ||
@@ -208,7 +218,6 @@ const Routes = () => {
       route.status.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Pagination logic
   const totalEntries = filteredRoutes.length;
   const totalPages = Math.ceil(totalEntries / itemsPerPage);
   const startIndex = (activePage - 1) * itemsPerPage;
@@ -223,15 +232,9 @@ const Routes = () => {
     }
   };
 
-  const handlePrevious = () => {
-    handlePageChange(activePage - 1);
-  };
+  const handlePrevious = () => handlePageChange(activePage - 1);
+  const handleNext = () => handlePageChange(activePage + 1);
 
-  const handleNext = () => {
-    handlePageChange(activePage + 1);
-  };
-
-  // Generate page numbers to display
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const formatDate = (dateString) => {
@@ -268,16 +271,11 @@ const Routes = () => {
   return (
     <AdminLayout>
       <div className="routes-content card">
-        {/* Header: Title, Create Button and Search */}
         <div className="routes-header">
           <h2 className="routes-title">Routes Management</h2>
           <div className="routes-actions">
-            <button 
-              className="create-btn"
-              onClick={() => setShowCreateModal(true)}
-            >
-              <Plus size={16} />
-              Create Route
+            <button className="create-btn" onClick={() => setShowCreateModal(true)}>
+              <Plus size={16} /> Create Route
             </button>
             <div className="search-wrapper">
               <Search className="search-icon" size={18} />
@@ -286,15 +284,13 @@ const Routes = () => {
                 placeholder="Search routes..."
                 className="search-input"
                 value={search}
-                onChange={e => setSearch(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
         </div>
 
-        {/* Table */}
         <div className="routes-table-container">
-          {/* Header Row */}
           <div className="table-row table-header">
             <div className="table-cell">Route ID</div>
             <div className="table-cell">Route Name</div>
@@ -303,7 +299,6 @@ const Routes = () => {
             <div className="table-cell">Actions</div>
           </div>
 
-          {/* Data Rows */}
           {currentRoutes.length === 0 ? (
             <div className="table-row">
               <div className="table-cell" colSpan={5} style={{ textAlign: 'center' }}>
@@ -322,40 +317,31 @@ const Routes = () => {
                 </div>
                 <div className="table-cell">{formatDate(route.createdAt)}</div>
                 <div className="table-cell actions-cell">
-                  <button 
-                    className="edit-btn"
-                    onClick={() => handleEdit(route)}
-                  >
+                  <button className="edit-btn" onClick={() => handleEdit(route)}>
                     <Edit2 size={16} />
                   </button>
                   {route.status === 'Scheduled' && (
-                    <button 
-                      className="start-btn"
-                      onClick={() => handleStartRoute(route)}
-                    >
+                    <button className="start-btn" onClick={() => handleStartRoute(route)}>
                       <Play size={16} />
                     </button>
                   )}
+                  <button className="delete-route" onClick={() => handleDeleteRoute(route.routeId)}>
+                    <Trash size={16} />
+                  </button>
                 </div>
               </div>
             ))
           )}
         </div>
 
-        {/* Pagination */}
         <div className="routes-pagination">
           <div className="pagination-info">
             Showing {showingStart} to {showingEnd} of {totalEntries} entries
           </div>
           <div className="pagination-controls">
-            <button
-              className="pagination-btn prev"
-              onClick={handlePrevious}
-              disabled={activePage === 1}
-            >
+            <button className="pagination-btn prev" onClick={handlePrevious} disabled={activePage === 1}>
               Previous
             </button>
-
             {pageNumbers.map((page) => (
               <button
                 key={page}
@@ -365,68 +351,11 @@ const Routes = () => {
                 {page}
               </button>
             ))}
-
-            <button
-              className="pagination-btn next"
-              onClick={handleNext}
-              disabled={activePage === totalPages}
-            >
+            <button className="pagination-btn next" onClick={handleNext} disabled={activePage === totalPages}>
               Next
             </button>
           </div>
         </div>
-
-        {/* Edit Modal */}
-        {editingRoute && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Edit Route</h3>
-              <form onSubmit={handleEditSubmit}>
-                <div className="form-group">
-                  <label>Route ID</label>
-                  <input
-                    type="text"
-                    value={editForm.routeId}
-                    onChange={(e) => setEditForm({...editForm, routeId: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Route Name</label>
-                  <input
-                    type="text"
-                    value={editForm.routeName}
-                    onChange={(e) => setEditForm({...editForm, routeName: e.target.value})}
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Status</label>
-                  <select
-                    value={editForm.status}
-                    onChange={(e) => setEditForm({...editForm, status: e.target.value})}
-                    required
-                  >
-                    <option value="No Schedule">No Schedule</option>
-                    <option value="Scheduled">Scheduled</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                  </select>
-                </div>
-                <div className="modal-actions">
-                  <button type="submit" className="save-btn">Save Changes</button>
-                  <button 
-                    type="button" 
-                    className="cancel-btn"
-                    onClick={() => setEditingRoute(null)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
 
         {/* Create Modal */}
         {showCreateModal && (
@@ -439,7 +368,7 @@ const Routes = () => {
                   <input
                     type="text"
                     value={createForm.routeId}
-                    onChange={(e) => setCreateForm({...createForm, routeId: e.target.value})}
+                    onChange={(e) => setCreateForm({ ...createForm, routeId: e.target.value })}
                     required
                   />
                 </div>
@@ -448,7 +377,7 @@ const Routes = () => {
                   <input
                     type="text"
                     value={createForm.routeName}
-                    onChange={(e) => setCreateForm({...createForm, routeName: e.target.value})}
+                    onChange={(e) => setCreateForm({ ...createForm, routeName: e.target.value })}
                     required
                   />
                 </div>
@@ -456,7 +385,7 @@ const Routes = () => {
                   <label>Status</label>
                   <select
                     value={createForm.status}
-                    onChange={(e) => setCreateForm({...createForm, status: e.target.value})}
+                    onChange={(e) => setCreateForm({ ...createForm, status: e.target.value })}
                     required
                   >
                     <option value="No Schedule">No Schedule</option>
@@ -465,13 +394,53 @@ const Routes = () => {
                 </div>
                 <div className="modal-actions">
                   <button type="submit" className="save-btn">Create Route</button>
-                  <button 
-                    type="button" 
-                    className="cancel-btn"
-                    onClick={() => setShowCreateModal(false)}
+                  <button type="button" className="cancel-btn" onClick={() => setShowCreateModal(false)}>Cancel</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Modal */}
+        {editingRoute && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Edit Route</h3>
+              <form onSubmit={handleEditSubmit}>
+                <div className="form-group">
+                  <label>Route ID</label>
+                  <input
+                    type="text"
+                    value={editForm.routeId}
+                    onChange={(e) => setEditForm({ ...editForm, routeId: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Route Name</label>
+                  <input
+                    type="text"
+                    value={editForm.routeName}
+                    onChange={(e) => setEditForm({ ...editForm, routeName: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Status</label>
+                  <select
+                    value={editForm.status}
+                    onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
+                    required
                   >
-                    Cancel
-                  </button>
+                    <option value="No Schedule">No Schedule</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+                <div className="modal-actions">
+                  <button type="submit" className="save-btn">Save Changes</button>
+                  <button type="button" className="cancel-btn" onClick={() => setEditingRoute(null)}>Cancel</button>
                 </div>
               </form>
             </div>
@@ -482,4 +451,4 @@ const Routes = () => {
   );
 };
 
-export default Routes; 
+export default Routes;
