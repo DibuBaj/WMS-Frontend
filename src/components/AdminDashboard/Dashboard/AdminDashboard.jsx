@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 // Assuming you might use icons from lucide-react or similar
 // import { Clock, MoreHorizontal, Truck, BarChart2, ArrowRightLeft } from "lucide-react"; 
 import AdminLayout from "../Navbar/AdminLayout";
@@ -7,6 +8,7 @@ import "./AdminDashboard.css";
 const API_BASE_URL = "http://localhost:3000/api"; // Updated to correct API URL
 
 export default function AdminDashboard() {
+  const navigate = useNavigate();
   const [routes, setRoutes] = useState([]);
   const [routesCount, setRoutesCount] = useState(0);
   const [collections, setCollections] = useState([]);
@@ -101,7 +103,6 @@ export default function AdminDashboard() {
           <div className="routes-section card">
             <div className="card-header">
               <h2 className="section-title">Active Route</h2>
-              <span className="icon-placeholder">...</span>
             </div>
             
             {routes.map(route => (
@@ -144,7 +145,9 @@ export default function AdminDashboard() {
         <div className="activities-section card">
           <div className="card-header">
             <h2 className="section-title">Recent Activities</h2>
-            <a href="#" className="view-all-link">View All</a>
+            <Link to="/pickupmanagement" className="view-all-link">
+              View All
+            </Link>
           </div>
           <div className="activities-table">
             {/* Header Row */}
