@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./Userschedule.css";
 import SuccessPopup from "../Navbar/SuccessPopup";
 import ErrorPopup from "../Navbar/ErrorPopup";
+import { FaEdit, FaTimes } from "react-icons/fa";
+
 
 const Userschedule = () => {
   const [data, setData] = useState([]);
@@ -231,13 +233,18 @@ const Userschedule = () => {
               <td>{row.amount}</td>
               <td className="status-container">
                 <span className={row.status === "Pending" ? "status-pending" : "status-completed"}>{row.status}</span>
-                <button className="menu-btn" onClick={() => setMenuOpen(menuOpen === row.id ? null : row.id)}>⋮</button>
+                <button className="menu-btns" onClick={() => setMenuOpen(menuOpen === row.id ? null : row.id)}>⋮</button>
                 {menuOpen === row.id && (
-                  <div className="dropdown-menu">
-                    <button onClick={() => handleEdit(row)}>Edit</button>
-                    <button onClick={() => handleDelete(row.id)}>Cancel</button>
-                  </div>
-                )}
+  <div className="dropdown-menu">
+    <button className="optionss" onClick={() => handleEdit(row)}>
+      <FaEdit style={{ marginRight: "6px" }} /> Edit
+    </button>
+    <button className="optionss" onClick={() => handleDelete(row.id)}>
+      <FaTimes style={{ marginRight: "6px" }} /> Cancel
+    </button>
+  </div>
+)}
+
               </td>
             </tr>
           ))}

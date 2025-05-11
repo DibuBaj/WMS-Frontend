@@ -7,15 +7,17 @@ import LogoutIcon from "../../../assets/Logouticon.svg";
 import DeleteIcon from "../../../assets/Delete.svg";
 import axios from "axios";
 
-
 const UserSettings = () => {
   const [isLogoutPopupOpen, setIsLogoutPopupOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [avatar, setAvatar] = useState(localStorage.getItem("avatar") || Adminlogo);
   const [userInfo, setUserInfo] = useState({ fullName: "", email: "" });
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const navigate = useNavigate(); 
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     const user = localStorage.getItem("user");
     if (user) {
@@ -48,10 +50,33 @@ const UserSettings = () => {
     setIsDeletePopupOpen(false);
   };
 
+  const handleUpdateDetails = async () => {
+    const token = localStorage.getItem("token");
+  
+    try {
+      await axios.put("http://localhost:3000/api/users/update-details", {
+        fullName: userInfo.fullName,
+        email: userInfo.email
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+  
+      localStorage.setItem("user", JSON.stringify(userInfo));
+      alert("Profile updated successfully.");
+    } catch (error) {
+      console.error("Failed to update details:", error);
+      alert("Failed to update profile.");
+    }
+  };
+  
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
-    
+
     try {
       await axios.post("http://localhost:3000/api/auth/logout", {}, {
         headers: {
@@ -72,7 +97,32 @@ const UserSettings = () => {
       }, 2000);
     }
   };
-
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem("token");
+    setIsDeleting(true);
+  
+    try {
+      await axios.delete("http://localhost:3000/api/users/delete-account", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      localStorage.clear();
+  
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    } catch (error) {
+      console.error("Account deletion failed:", error);
+      localStorage.clear();
+  
+      setTimeout(() => {
+        navigate("/signin");
+      }, 2000);
+    }
+  };
+  
   return (
     <div className="settings-page">
       <div className={`settings-layout ${isLogoutPopupOpen || isDeletePopupOpen ? "blur-background" : ""}`}>
@@ -124,7 +174,11 @@ const UserSettings = () => {
                 />
               </div>
 
-              <button className="save-button">Save Changes</button>
+              <button className="save-button" onClick={handleUpdateDetails}>
+  Save Changes
+</button>
+
+
             </div>
           </div>
 
@@ -159,7 +213,7 @@ const UserSettings = () => {
           <div className="popup-boxes">
             <p>Are you sure you want to delete your account?</p>
             <div className="popuppp-buttonss">
-              <button className="popupp-confirms">Yes</button>
+              <button className="popupp-confirms" onClick={handleDeleteAccount}>Yes</button>
               <button className="popupp-cancels" onClick={closePopups}>
                 No
               </button>
@@ -168,7 +222,7 @@ const UserSettings = () => {
         </div>
       )}
 
-    {isLoggingOut && (
+      {isLoggingOut && (
         <div className="logout-overlay">
           <div className="logout-animation">
             <span className="loading-spinner"></span>
@@ -176,9 +230,17 @@ const UserSettings = () => {
           </div>
         </div>
       )}
+      {isDeleting && (
+  <div className="logout-overlay">
+    <div className="logout-animation">
+      <span className="loading-spinner"></span>
+      <p>Deleting...</p>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
 
 export default UserSettings;
-
