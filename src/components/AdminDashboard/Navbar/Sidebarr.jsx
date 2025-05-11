@@ -3,6 +3,10 @@ import { NavLink } from "react-router-dom";
 import "./Sidebarr.css";
 import DashboardIcon from "../../../assets/Dashboard.svg";
 import ScheduleIcon from "../../../assets/Schedule.svg";
+import RecycleIcon from "../../../assets/Recycle.svg";
+import AdminlogoIcon from "../../../assets/Adminlogo.svg";
+import CollectionIcon from '../../../assets/Collection.png';
+import RouteIcon from '../../../assets/Route.png';
 
 const Sidebarr = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -33,11 +37,11 @@ const Sidebarr = () => {
           </NavLink>
         </li>
         <li className="sidebar__menu-item">
-          <NavLink 
-            to="/collection" 
+          <NavLink
+            to="/collection"
             className={({ isActive }) => `sidebar__link ${isActive ? "sidebar__link--active" : ""}`}
           >
-            <img src={ScheduleIcon} alt="Collection" className="sidebar__icon" />
+            <img src={CollectionIcon} alt="Collection" className="sidebar__icon" />
             <span className="sidebar__text">Collection</span>
           </NavLink>
         </li>
@@ -51,11 +55,11 @@ const Sidebarr = () => {
           </NavLink>
         </li>
         <li className="sidebar__menu-item">
-          <NavLink 
-            to="/routes" 
+          <NavLink
+            to="/routes"
             className={({ isActive }) => `sidebar__link ${isActive ? "sidebar__link--active" : ""}`}
           >
-            <img src={ScheduleIcon} alt="Routes" className="sidebar__icon" />
+            <img src={RouteIcon} alt="Routes" className="sidebar__icon" />
             <span className="sidebar__text">Routes</span>
           </NavLink>
         </li>

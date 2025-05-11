@@ -82,6 +82,9 @@
   width: 90%;
   max-width: 500px;
   position: relative;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
 }
 
 .modal-close {
@@ -102,12 +105,13 @@
 }
 
 .modal-input {
-  width: 100%;
+  width: calc(100% - 1.5rem);
   padding: 0.75rem;
   margin-bottom: 1rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #e2e8f0 !important;
   border-radius: 6px;
   font-size: 0.875rem;
+  box-sizing: border-box;
 }
 
 .modal-input:focus {
@@ -116,8 +120,14 @@
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
 .modal-create-btn {
-  width: 100%;
+  flex: 1;
   padding: 0.75rem;
   background-color: #395849;
   color: white;
@@ -130,6 +140,22 @@
 
 .modal-create-btn:hover {
   background-color: #2e473a;
+}
+
+.modal-delete-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-delete-btn:hover {
+  background-color: #b91c1c;
 }
 
 .modal-create-btn:disabled {
