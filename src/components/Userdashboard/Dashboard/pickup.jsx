@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "./Pickup.css";
 
-const Pickup = ({ addPickup }) => {
+const Pickup = ({ addPickup, isPaymentPending }) => {
   const [formData, setFormData] = useState({
     address: '',
     dateTime: '',
@@ -56,8 +56,45 @@ const Pickup = ({ addPickup }) => {
     }
   };
 
+  const validateDateTime = (date) => {
+    // Convert to Nepal time (UTC+5:45)
+    const nepalOffset = 5.75 * 60 * 60 * 1000; // 5 hours and 45 minutes in milliseconds
+    const nepalDate = new Date(date.getTime() + nepalOffset);
+    const hours = nepalDate.getUTCHours();
+    const minutes = nepalDate.getUTCMinutes();
+
+    // Check if time is between 5 AM and 11:59 PM
+    if (hours < 5) {
+      return false;
+    }
+    return true;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "dateTime") {
+      const selectedDate = new Date(value);
+      const currentDate = new Date();
+      
+      if (selectedDate < currentDate) {
+        setError("Cannot select a past date and time");
+        return;
+      }
+      
+      // Convert to Nepal time (UTC+5:45)
+      const nepalOffset = 5.75 * 60 * 60 * 1000; // 5 hours and 45 minutes in milliseconds
+      const nepalDate = new Date(selectedDate.getTime() + nepalOffset);
+      const hours = nepalDate.getUTCHours();
+      
+      if (hours < 5) {
+        setError("Pickup time must be between 5 AM and 11:59 PM (Nepal time)");
+        return;
+      }
+      
+      // Clear error message if time is valid
+      setError('');
+    }
 
     if (name === "unit") {
       setFormData(prev => {
@@ -97,6 +134,13 @@ const Pickup = ({ addPickup }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Prevent submission if payment is pending
+    if (isPaymentPending) {
+      setError("Please complete or cancel the pending payment first.");
+      return;
+    }
+
     setError('');
 
     const { address, dateTime, subscription, wasteType, route, amount, unit } = formData;
@@ -118,9 +162,21 @@ const Pickup = ({ addPickup }) => {
       adjustedUnit = 'kg';
     }
 
+    // Create a new Date object from the input datetime
+    const selectedDateTime = new Date(dateTime);
+    
+    // Validate the time using Nepal time
+    if (!validateDateTime(selectedDateTime)) {
+      setError("Pickup time must be between 5 AM and 11:59 PM");
+      return;
+    }
+
+    // Format the date to ISO string with UTC timezone
+    const formattedDateTime = selectedDateTime.toISOString();
+
     const payload = {
       address,
-      pickupDateTime: new Date(dateTime).toISOString(),
+      pickupDateTime: formattedDateTime,
       subscription,
       wasteType: wasteType.toLowerCase(),
       route,
@@ -128,35 +184,17 @@ const Pickup = ({ addPickup }) => {
       unit: adjustedUnit
     };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/pickups",
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      console.log("Pickup Scheduled Successfully:", response.data);
-      addPickup(payload);
-
-      setFormData({
-        address: '',
-        dateTime: '',
-        subscription: '1 Day (Rs.500)',
-        wasteType: wasteTypes[0] || '',
-        route: '',
-        amount: '',
-        unit: 'kg'
-      });
-
-    } catch (err) {
-      console.error("Submission Error:", err);
-      setError(err.response?.data?.message || "Failed to schedule pickup.");
-    }
+    // Pass the payload to parent component and reset form
+    addPickup(payload);
+    setFormData({
+      address: '',
+      dateTime: '',
+      subscription: '1 Day (Rs.500)',
+      wasteType: wasteTypes[0] || '',
+      route: '',
+      amount: '',
+      unit: 'kg'
+    });
   };
 
   return (
@@ -165,18 +203,28 @@ const Pickup = ({ addPickup }) => {
       <p className='subtext'>Schedule a new waste collection</p>
 
       {error && <p className="error-message">{error}</p>}
+      {isPaymentPending && (
+        <p className="error-message" style={{ color: '#ff9800' }}>
+          Please complete or cancel the pending payment before scheduling a new pickup.
+        </p>
+      )}
 
       <form className="pickup-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label className="form-label">Pickup Date & Time</label>
-          <input
-            type="datetime-local"
-            name="dateTime"
-            value={formData.dateTime}
-            onChange={handleChange}
-            className="pickup-input"
-            required
-          />
+          <div className="popup-fields">
+            <input
+              type="datetime-local"
+              name="dateTime"
+              value={formData.dateTime}
+              onChange={handleChange}
+              className="pickup-input"
+              min={new Date().toISOString().slice(0, 16)}
+              required
+            />
+            <small className="time-hint">Pickup time must be between 5 AM and 11:59 PM (Nepal time)</small>
+            {error && <small className="error-message">{error}</small>}
+          </div>
         </div>
 
         <div className="form-group">
@@ -204,7 +252,7 @@ const Pickup = ({ addPickup }) => {
             <option value="">Select a route</option>
             {routes.map(route => (
               <option key={route._id} value={route.routeName}>
-                {route.routeName} ({route.routeId}) - {route.status}
+                {route.routeName} ({route.routeId})
               </option>
             ))}
           </select>
@@ -244,7 +292,7 @@ const Pickup = ({ addPickup }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Waste Amount</label>
+          <label className="form-label">Waste Weight</label>
           <input
             type="number"
             name="amount"
@@ -254,7 +302,7 @@ const Pickup = ({ addPickup }) => {
               if (e.key === "Enter") handleAmountConversion();
             }}
             onBlur={handleAmountConversion}
-            placeholder="Enter amount"
+            placeholder="Enter waste weight"
             className="pickup-input"
             min="1"
             required
@@ -275,7 +323,14 @@ const Pickup = ({ addPickup }) => {
           </select>
         </div>
 
-        <button type="submit" className="pickup-button">Schedule Pickup</button>
+        <button 
+          type="submit" 
+          className="pickup-button"
+          disabled={isPaymentPending}
+          style={{ opacity: isPaymentPending ? 0.6 : 1 }}
+        >
+          {isPaymentPending ? 'Payment Pending...' : 'Schedule Pickup'}
+        </button>
       </form>
     </div>
   );

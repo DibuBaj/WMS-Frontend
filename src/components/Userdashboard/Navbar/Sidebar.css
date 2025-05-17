@@ -29,12 +29,13 @@
 
 .sidebar {
   width: 200px; 
-  /* height: calc(100vh - 50px); */
-  height: 90vh;
+  height: 115vh;
   background-color: #fff;
   padding-top: 20px;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   transition: width 0.3s ease; 
+  display: flex;
+  flex-direction: column;
 }
 .sidebar a {
   display: flex;

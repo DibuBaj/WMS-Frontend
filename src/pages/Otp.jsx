@@ -150,32 +150,7 @@ const Otp = () => {
     }
   };
 
-  const handleResend = async () => {
-    try {
-      setLoading(true);
-      // Replace this URL with actual resend OTP API if different
-      const response = await fetch("http://localhost:3000/api/users/resend-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
 
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("OTP resent successfully!");
-      } else {
-        alert(result.message || "Failed to resend OTP.");
-      }
-    } catch (error) {
-      console.error("Error resending OTP:", error);
-      alert("An error occurred while resending OTP.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="otp-container">
@@ -199,10 +174,6 @@ const Otp = () => {
           />
         ))}
       </div>
-
-      <p className="resend-code" onClick={handleResend} style={{ cursor: "pointer", color: "blue" }}>
-        Resend code
-      </p>
 
       <button className="verify-btn" onClick={handleSubmit} disabled={loading}>
         {loading ? "Verifying..." : "Verify & Proceed"}

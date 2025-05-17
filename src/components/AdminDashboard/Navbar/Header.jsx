@@ -36,21 +36,25 @@ const Header = () => {
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
     
-    setTimeout(() => navigate("/signin"), 3000);
     try {
+      // Clear all auth-related data first
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("adminToken");
+      
+      // Then make the API call
       await axios.post("http://localhost:3000/api/auth/logout", {}, {
         headers: {
           Authorization: `Bearer ${token}`, 
         },
       });
-  
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      
+      // Navigate immediately after clearing data
+      navigate("/signin", { replace: true });
     } catch (err) {
       console.error("Logout failed:", err);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      setTimeout(() => navigate("/signin"), 1500);
+      // Even if the API call fails, we still want to log the user out
+      navigate("/signin", { replace: true });
     }
   };
 
@@ -82,7 +86,7 @@ const Header = () => {
               <div className="dropdown-username">{username}</div>
               <div className="dropdown-item" onClick={handleLogout}>
                 <img src={logout} alt="Logout" className="dropdown-icon" />
-                Logout
+                {isLoggingOut ? "Logging out..." : "Logout"}
               </div>
             </div>
           )}

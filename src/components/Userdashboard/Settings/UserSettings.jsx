@@ -52,9 +52,17 @@ const UserSettings = () => {
 
   const handleUpdateDetails = async () => {
     const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
   
+    if (!parsedUser?.id) {
+      alert("User session expired. Please login again.");
+      window.location.href = '/signin';
+      return;
+    }
+
     try {
-      await axios.put("http://localhost:3000/api/users/update-details", {
+      const response = await axios.put("http://localhost:3000/api/users/update-details", {
         fullName: userInfo.fullName,
         email: userInfo.email
       }, {
@@ -63,12 +71,26 @@ const UserSettings = () => {
           "Content-Type": "application/json"
         }
       });
+
+      // Preserve the user ID when updating localStorage
+      const updatedUser = {
+        ...parsedUser,  // Keep existing user data including ID
+        fullName: userInfo.fullName,
+        email: userInfo.email
+      };
   
-      localStorage.setItem("user", JSON.stringify(userInfo));
+      localStorage.setItem("user", JSON.stringify(updatedUser));
       alert("Profile updated successfully.");
     } catch (error) {
       console.error("Failed to update details:", error);
-      alert("Failed to update profile.");
+      if (error.response?.status === 401) {
+        alert("Session expired. Please login again.");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = '/signin';
+      } else {
+        alert("Failed to update profile.");
+      }
     }
   };
   

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Userschedule.css";
 import SuccessPopup from "../Navbar/SuccessPopup";
 import ErrorPopup from "../Navbar/ErrorPopup";
 import { FaEdit, FaTimes } from "react-icons/fa";
-
 
 const Userschedule = () => {
   const [data, setData] = useState([]);
@@ -16,9 +16,46 @@ const Userschedule = () => {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  const [unit, setUnit] = useState("kg");
+  const [routes, setRoutes] = useState([]);
+  const [wasteTypes, setWasteTypes] = useState([]);
 
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    fetchRoutes();
+    fetchWasteTypes();
+  }, []);
+
+  const fetchRoutes = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/route/get-routes", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.data.success) {
+        setRoutes(response.data.data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch routes", err);
+    }
+  };
+
+  const fetchWasteTypes = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/collections", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.data.success) {
+        const types = [...new Set(response.data.collections.map(col => col.type))];
+        setWasteTypes(types);
+      }
+    } catch (err) {
+      console.error("Failed to fetch waste types", err);
+    }
+  };
 
   useEffect(() => {
     const fetchPickupsHistory = async () => {
@@ -37,16 +74,19 @@ const Userschedule = () => {
 
           const result = await response.json();
 
-          if (result.message === "Pickup history retrieved successfully" || result.pickups) {
-            const transformedData = result.pickups.map((pickup) => ({
-              id: pickup._id,
-              date: new Date(pickup.pickupDateTime).toISOString().slice(0, 16),
-              location: pickup.address,
-              route: pickup.route || "-",
-              type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
-              amount: `${pickup.amount} ${pickup.unit}`,
-              status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
-            }));
+          if (result.pickups) {
+            const transformedData = result.pickups.map((pickup) => {
+              return {
+                id: pickup._id,
+                date: pickup.pickupDateTime,
+                location: pickup.address,
+                route: pickup.route || "-",
+                type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
+                amount: `${pickup.amount} ${pickup.unit}`,
+                status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
+                subscription: pickup.subscription,
+              };
+            });
             setData(transformedData);
           } else {
             showError("Failed to load pickup history.");
@@ -66,13 +106,24 @@ const Userschedule = () => {
   }, [token]);
 
   const handleEdit = (item) => {
+    const utcDate = new Date(item.date);
+    const nepalDate = new Date(utcDate.getTime() + (5.75 * 60 * 60 * 1000));
+    const localDateTime = nepalDate.toISOString().slice(0, 16);
+
+    const now = new Date();
+    const nepalNow = new Date(now.getTime() + (5.75 * 60 * 60 * 1000));
+    const minDateTime = nepalNow.toISOString().slice(0, 16);
+
     setEditItem(item.id);
     setEditData({
-      date: item.date,
+      date: localDateTime,
+      minDate: minDateTime,
       location: item.location,
       route: item.route,
       type: item.type,
       amount: item.amount.split(' ')[0],
+      unit: item.amount.split(' ')[1],
+      subscription: item.subscription
     });
     setMenuOpen(null);
 
@@ -83,23 +134,47 @@ const Userschedule = () => {
     }, 0);
   };
 
+  const validateDateTime = (dateTimeString) => {
+    try {
+      const [datePart, timePart] = dateTimeString.split('T');
+      const [hours] = timePart.split(':').map(Number);
+      return hours >= 5;
+    } catch (error) {
+      console.error("Error in validateDateTime:", error);
+      return false;
+    }
+  };
+
   const handleSaveEdit = async () => {
     if (!editData.date || !editData.location || !editData.route || !editData.type || !editData.amount) {
       showError("All fields are required.");
       return;
     }
 
-    const payload = {
-      address: editData.location,
-      route: editData.route,
-      pickupDateTime: new Date(editData.date).toISOString(),
-      subscription: "1 Week ($5)",
-      wasteType: editData.type.toLowerCase(),
-      amount: parseFloat(editData.amount),
-      unit: unit,
-    };
+    if (!validateDateTime(editData.date)) {
+      showError("Pickup time must be between 5 AM and 11:59 PM (Nepal time)");
+      return;
+    }
 
     try {
+      // Manual conversion from Nepal time to UTC
+      const [datePart, timePart] = editData.date.split("T");
+      const [year, month, day] = datePart.split("-").map(Number);
+      const [hour, minute] = timePart.split(":").map(Number);
+      const nepalDate = new Date(Date.UTC(year, month - 1, day, hour, minute));
+      const utcDate = new Date(nepalDate.getTime() - (5.75 * 60 * 60 * 1000));
+      const formattedDateTime = utcDate.toISOString();
+
+      const payload = {
+        address: editData.location,
+        route: editData.route,
+        pickupDateTime: formattedDateTime,
+        subscription: editData.subscription,
+        wasteType: editData.type.toLowerCase().replace("-", " "),
+        amount: parseFloat(editData.amount),
+        unit: editData.unit
+      };
+
       const response = await fetch(`http://localhost:3000/api/pickups/${editItem}`, {
         method: "PUT",
         headers: {
@@ -114,12 +189,13 @@ const Userschedule = () => {
       if (response.ok) {
         const updatedItem = {
           id: editItem,
-          date: new Date(payload.pickupDateTime).toISOString().slice(0, 16),
+          date: formattedDateTime,
           location: payload.address,
           route: payload.route,
           type: payload.wasteType.charAt(0).toUpperCase() + payload.wasteType.slice(1),
           amount: `${payload.amount} ${payload.unit}`,
           status: "Pending",
+          subscription: payload.subscription,
         };
 
         setData(data.map(item => item.id === editItem ? updatedItem : item));
@@ -132,7 +208,8 @@ const Userschedule = () => {
         showError(result.message || "Failed to update data.");
       }
     } catch (error) {
-      showError("Error updating the entry.");
+      console.error("Error in handleSaveEdit:", error);
+      showError("Error processing date and time");
     }
   };
 
@@ -178,9 +255,29 @@ const Userschedule = () => {
     document.querySelector('.overlay').style.display = 'none';
   };
 
+  const formatDateTime = (dateString) => {
+    try {
+      const utcDate = new Date(dateString);
+      const nepalDate = new Date(utcDate.getTime() + (5.75 * 60 * 60 * 1000));
+      const year = nepalDate.getUTCFullYear();
+      const month = String(nepalDate.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(nepalDate.getUTCDate()).padStart(2, '0');
+      let hours = nepalDate.getUTCHours();
+      const minutes = String(nepalDate.getUTCMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      hours = String(hours).padStart(2, '0');
+      return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  };
+
   const filteredData = data.filter((row) => {
+    const typeNormalized = row.type.toLowerCase().replace(/\s|-/g, '');
+    const filterNormalized = filterType.toLowerCase().replace(/\s|-/g, '');
     return (
-      (filterType === "All" || row.type.toLowerCase() === filterType.toLowerCase()) &&
+      (filterType === "All" || typeNormalized === filterNormalized) &&
       (row.location.toLowerCase().includes(search.toLowerCase()) ||
         row.route.toLowerCase().includes(search.toLowerCase()) ||
         row.type.toLowerCase().includes(search.toLowerCase()) ||
@@ -226,7 +323,7 @@ const Userschedule = () => {
         <tbody>
           {filteredData.map((row) => (
             <tr key={row.id}>
-              <td>{new Date(row.date).toLocaleString()}</td>
+              <td>{formatDateTime(row.date)}</td>
               <td>{row.location}</td>
               <td>{row.route}</td>
               <td><span className="type-badge">{row.type}</span></td>
@@ -235,16 +332,15 @@ const Userschedule = () => {
                 <span className={row.status === "Pending" ? "status-pending" : "status-completed"}>{row.status}</span>
                 <button className="menu-btns" onClick={() => setMenuOpen(menuOpen === row.id ? null : row.id)}>⋮</button>
                 {menuOpen === row.id && (
-  <div className="dropdown-menu">
-    <button className="optionss" onClick={() => handleEdit(row)}>
-      <FaEdit style={{ marginRight: "6px" }} /> Edit
-    </button>
-    <button className="optionss" onClick={() => handleDelete(row.id)}>
-      <FaTimes style={{ marginRight: "6px" }} /> Cancel
-    </button>
-  </div>
-)}
-
+                  <div className="dropdown-menu">
+                    <button className="optionss" onClick={() => handleEdit(row)}>
+                      <FaEdit style={{ marginRight: "6px" }} /> Edit
+                    </button>
+                    <button className="optionss" onClick={() => handleDelete(row.id)}>
+                      <FaTimes style={{ marginRight: "6px" }} /> Cancel
+                    </button>
+                  </div>
+                )}
               </td>
             </tr>
           ))}
@@ -262,8 +358,10 @@ const Userschedule = () => {
             <input
               type="datetime-local"
               value={editData.date}
+              min={editData.minDate}
               onChange={(e) => setEditData({ ...editData, date: e.target.value })}
             />
+            <small className="time-hint">Pickup time must be between 5 AM and 11:59 PM (Nepal time)</small>
           </div>
 
           <div className="popup-fields">
@@ -277,12 +375,18 @@ const Userschedule = () => {
 
           <div className="popup-fields">
             <label>Route</label>
-            <input
-              type="text"
+            <select
               value={editData.route}
               onChange={(e) => setEditData({ ...editData, route: e.target.value })}
-              placeholder="Enter route ID or name"
-            />
+              required
+            >
+              <option value="">Select a route</option>
+              {routes.map(route => (
+                <option key={route._id} value={route.routeName}>
+                  {route.routeName} ({route.routeId})
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="popup-fields">
@@ -290,10 +394,14 @@ const Userschedule = () => {
             <select
               value={editData.type}
               onChange={(e) => setEditData({ ...editData, type: e.target.value })}
+              required
             >
-              <option value="Organic">Organic</option>
-              <option value="Recyclable">Recyclable</option>
-              <option value="Non-Recyclable">Non-Recyclable</option>
+              <option value="">Select waste type</option>
+              {wasteTypes.map((type, idx) => (
+                <option key={idx} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -304,10 +412,16 @@ const Userschedule = () => {
               value={editData.amount}
               onChange={(e) => setEditData({ ...editData, amount: e.target.value })}
               placeholder="Amount"
+              min="1"
+              required
             />
-            <select value={unit} onChange={(e) => setUnit(e.target.value)}>
-              <option value="kg">Kg</option>
-              <option value="g">Gram</option>
+            <select 
+              value={editData.unit} 
+              onChange={(e) => setEditData({ ...editData, unit: e.target.value })}
+              required
+            >
+              <option value="kg">kg</option>
+              <option value="g">g</option>
             </select>
           </div>
 
@@ -321,7 +435,6 @@ const Userschedule = () => {
       {showSuccessPopup && (
         <SuccessPopup message={popupMessage} onClose={() => setShowSuccessPopup(false)} />
       )}
-
       {showErrorPopup && (
         <ErrorPopup message={popupMessage} onClose={() => setShowErrorPopup(false)} />
       )}

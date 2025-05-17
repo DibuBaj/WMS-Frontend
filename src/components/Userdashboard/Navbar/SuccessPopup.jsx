@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Popup.css';
 
-const SuccessPopup = ({ message, onClose }) => {
+const SuccessPopup = ({ message, onClose = () => {} }) => {
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -13,7 +13,11 @@ const SuccessPopup = ({ message, onClose }) => {
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => onClose(), 5000);
+    setTimeout(() => {
+      if (typeof onClose === 'function') {
+        onClose();
+      }
+    }, 500);
   };
 
   return (

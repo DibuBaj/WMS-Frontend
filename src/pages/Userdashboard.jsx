@@ -10,6 +10,7 @@ import Imepay from "../assets/Imepay.jpg";
 import SuccessPopup from "../components/Userdashboard/Navbar/SuccessPopup";
 import ErrorPopup from "../components/Userdashboard/Navbar/ErrorPopup";
 import Footer from "../components/Userdashboard/Navbar/Footer.jsx";
+import axios from "axios";
 
 const Userdashboard = () => {
   const [recentPickups, setRecentPickups] = useState([]);
@@ -18,21 +19,45 @@ const Userdashboard = () => {
   const [currentPickup, setCurrentPickup] = useState(null);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState(false);
+  const [userId, setUserId] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isPaymentPending, setIsPaymentPending] = useState(false);
+  const [pendingPickupData, setPendingPickupData] = useState(null);
 
-  const token = localStorage.getItem("token");
-
-  // Fetch recent pickups on mount
- useEffect(() => {
-  const fetchRecentPickups = async () => {
-    try {
+  // Check authentication status on mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
       const storedUser = localStorage.getItem('user');
       const parsedUser = storedUser ? JSON.parse(storedUser) : null;
 
-      if (!parsedUser?.id || !token) {
-        console.warn("Missing user ID or token.");
-        return;
+      if (token && parsedUser?.id) {
+        setIsAuthenticated(true);
+        setUserId(parsedUser.id);
+        return true;
       }
+      return false;
+    };
 
+    if (!checkAuth()) {
+      // If not authenticated, redirect to signin
+      window.location.href = '/signin';
+    }
+  }, []);
+
+  // Function to fetch recent pickups
+  const fetchRecentPickups = async () => {
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem('user');
+    const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+
+    if (!parsedUser?.id || !token) {
+      console.warn("Authentication required. Redirecting to signin...");
+      window.location.href = '/signin';
+      return;
+    }
+
+    try {
       const response = await fetch(`http://localhost:3000/api/pickups/history?userId=${parsedUser.id}`, {
         method: "GET",
         headers: {
@@ -40,6 +65,15 @@ const Userdashboard = () => {
           "Content-Type": "application/json",
         },
       });
+
+      if (response.status === 401) {
+        // Token expired or invalid
+        console.warn("Session expired. Redirecting to signin...");
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        window.location.href = '/signin';
+        return;
+      }
 
       const result = await response.json();
 
@@ -51,82 +85,134 @@ const Userdashboard = () => {
             type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
             amount: `${pickup.amount} ${pickup.unit}`,
             status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
-            payment: "", // Add logic here if payment info exists
+            payment: pickup.payment || "",
           }))
-          .slice(0, 5); // Only latest 5
+          .slice(0, 5);
 
         setRecentPickups(transformedData);
       } else {
         console.warn("No pickups found in response.");
+        setRecentPickups([]);
       }
     } catch (err) {
       console.error("Error fetching recent pickups:", err);
+      setRecentPickups([]);
     }
   };
 
-  fetchRecentPickups();
-}, [token]);
+  // Fetch pickups when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchRecentPickups();
+    }
+  }, [isAuthenticated]);
+
+  // Listen for changes to user data in localStorage
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'user' || e.key === 'token') {
+        const token = localStorage.getItem("token");
+        const storedUser = localStorage.getItem('user');
+        const parsedUser = storedUser ? JSON.parse(storedUser) : null;
+
+        if (token && parsedUser?.id) {
+          setIsAuthenticated(true);
+          setUserId(parsedUser.id);
+          fetchRecentPickups();
+        } else {
+          setIsAuthenticated(false);
+          setUserId(null);
+          window.location.href = '/signin';
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const addPickup = (newPickup) => {
+    // Store the pickup data and show payment popup
+    setPendingPickupData(newPickup);
     setCurrentPickup(newPickup);
     setPopupMessage(
       `New pickup request added successfully!\nSubscription: ${newPickup.subscription}.\nPlease select a payment method.`
     );
-    
     setShowPopup(true);
+    setIsPaymentPending(true);
   };
 
   const handlePaymentSelection = async (paymentMethod) => {
-    if (currentPickup) {
-      // Update the current pickup with payment method
-      const updatedPickup = { ...currentPickup, payment: paymentMethod };
-
-      // Hide the payment popup
-      setShowPopup(false);
-
+    if (currentPickup && pendingPickupData) {
       try {
-        // Re-fetch the data from the API to reflect the latest pickup list
-        const response = await fetch("http://localhost:3000/api/pickups/history", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
+        // Submit the pickup request with payment method
+        const response = await axios.post(
+          "http://localhost:3000/api/pickups",
+          {
+            ...pendingPickupData,
+            payment: paymentMethod
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
-        const result = await response.json();
+        console.log("Pickup Scheduled Successfully:", response.data);
 
-        if (result.message === "Pickup history retrieved successfully for user") {
-          const transformedData = result.pickups
-            .map((pickup) => ({
-              date: new Date(pickup.pickupDateTime).toLocaleString(),
-              address: pickup.address, // Address from the API response
-              type: pickup.wasteType.charAt(0).toUpperCase() + pickup.wasteType.slice(1),
-              amount: `${pickup.amount} ${pickup.unit}`,
-              status: pickup.status.charAt(0).toUpperCase() + pickup.status.slice(1),
-              payment: "", // Placeholder, since it's not in the API
-            }))
-            .slice(0, 5); // Take only the first 5 pickups
+        // Update the recent pickups state
+        const transformedPickup = {
+          date: new Date().toLocaleString(),
+          address: pendingPickupData.address,
+          type: pendingPickupData.wasteType.charAt(0).toUpperCase() + pendingPickupData.wasteType.slice(1),
+          amount: `${pendingPickupData.amount} ${pendingPickupData.unit}`,
+          status: "Pending",
+          payment: paymentMethod,
+        };
 
-          // Merge the newly added pickup with the fetched data, filter out empty/invalid pickups
-          setRecentPickups((prev) => {
-            const validUpdatedPickup = updatedPickup && updatedPickup.date && updatedPickup.address; // Check if pickup is valid
-            const newData = validUpdatedPickup ? [updatedPickup, ...transformedData] : [...transformedData];
-            return newData.slice(0, 5); // Always limit to 5 most recent pickups
-          });
-        }
+        setRecentPickups(prev => [transformedPickup, ...prev].slice(0, 5));
+        
+        // Reset states
+        setShowPopup(false);
+        setIsPaymentPending(false);
+        setCurrentPickup(null);
+        setPendingPickupData(null);
+        
+        // Show success message
+        setPaymentSuccess(true);
+        setTimeout(() => setPaymentSuccess(false), 3000);
+
+        // Refresh the pickups list
+        await fetchRecentPickups();
       } catch (err) {
-        console.error("Error updating pickups:", err);
+        console.error("Error submitting pickup:", err);
         setPaymentError(true);
         setTimeout(() => setPaymentError(false), 3000);
       }
-
-      // Show success message if payment method is selected successfully
-      if (paymentMethod) {
-        setPaymentSuccess(true);
-        setTimeout(() => setPaymentSuccess(false), 3000);
-      }
     }
   };
+
+  const handleClosePaymentPopup = () => {
+    // Reset all states when popup is closed
+    setShowPopup(false);
+    setIsPaymentPending(false);
+    setCurrentPickup(null);
+    setPendingPickupData(null);
+  };
+
+  // Add click outside handler for popup
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showPopup && !event.target.closest('.popup-message')) {
+        handleClosePaymentPopup();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showPopup]);
 
   return (
     <>
@@ -134,7 +220,7 @@ const Userdashboard = () => {
       <div className="user-dashboard">
         <Sidebar />
         <div className={`dashboard-wrapper ${showPopup ? "blurred" : ""}`}>
-          <Pickup addPickup={addPickup} />
+          <Pickup addPickup={addPickup} isPaymentPending={isPaymentPending} />
           <Recentpickup recentPickups={recentPickups} />
         </div>
       </div>
@@ -142,7 +228,7 @@ const Userdashboard = () => {
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-message">
-            <button className="close-button" onClick={() => setShowPopup(false)}>✖</button>
+            <button className="close-button" onClick={handleClosePaymentPopup}>✖</button>
             <p>{popupMessage}</p>
             <div className="payment-options">
               <img className="esewa payment-icon" src={Esewa} alt="Esewa" onClick={() => handlePaymentSelection("Esewa")} />
@@ -156,7 +242,6 @@ const Userdashboard = () => {
       {paymentSuccess && <SuccessPopup message="Payment successful! Your pickup has been processed." />}
       {paymentError && <ErrorPopup message="Payment failed. Please try again." />}
       <Footer/>
-
     </>
   );
 };

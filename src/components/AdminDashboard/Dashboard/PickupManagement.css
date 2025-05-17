@@ -8,17 +8,15 @@
 
 /* Content Area - Apply card styling */
 .pickup-content {
-  /* Adjust margin-left based on actual Sidebarr width */
-  margin-left: 10px; 
-  margin-top: 30px; /* Consistent margin */
-  margin-right: 30px; /* Add margin to the right */
-  margin-bottom: 30px; /* Add margin at the bottom */
-  /* Restore full padding to the card */
-  padding: 25px 30px; 
-  width: calc(100% - 250px - 40px); /* Adjust width based on Sidebarr and margins */
+  margin-left: 10px;
+  margin-top: 30px;
+  margin-right: 30px;
+  margin-bottom: 30px;
+  padding: 25px 30px;
+  /* width: calc(100% - 250px - 40px); */
   background-color: white;
-  border-radius: 12px; /* Rounded corners */
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07); /* Subtle shadow */
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
   display: flex;
   flex-direction: column;
 }
@@ -27,19 +25,16 @@
 .pickup-header {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Use center alignment for vertical centering */
-  /* Remove padding-top, it's handled by parent */
-  padding-top: 0; 
-  /* Remove padding-bottom and border */
-  padding-bottom: 0; 
-  border-bottom: none; 
-  /* Control all space after header with margin */
-  margin-bottom: 30px; /* Adjust as needed */
+  align-items: center;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  margin-bottom: 30px;
 }
 
 .pickup-title {
   margin: 0;
-  font-size: 20px; /* Larger title */
+  font-size: 20px;
   font-weight: 600;
   color: #333;
 }
@@ -47,32 +42,29 @@
 /* Search Wrapper */
 .search-wrapper {
   position: relative;
-  max-width: 200px; /* Adjust width as needed */
-  /* Add small top margin to nudge down */
-  margin-top: 3px; /* Adjust this value as needed */
+  max-width: 200px;
+  margin-top: 3px;
 }
 
 .search-icon {
   position: absolute;
-  left: 2px; 
+  left: 2px;
   top: 46%;
   transform: translateY(-50%);
-  color: #ccc; /* Even lighter icon */
-  pointer-events: none; 
+  color: #ccc;
+  pointer-events: none;
 }
 
 .search-input {
   width: 100%;
-  padding: 9px 5px 9px 20px; /* Slightly increased vertical padding */
-  border: 1px solid #eee; /* Even lighter border */
-  border-radius: 8px; 
+  padding: 9px 5px 9px 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
   font-size: 14px;
   outline: none;
-  background-color: #fff; /* White background */
+  background-color: #fff;
 }
-.search-input::placeholder {
-  color: #ccc; /* Lighter placeholder */
-}
+
 .search-input:focus {
   border-color: #395849;
   box-shadow: 0 0 0 2px rgba(57, 88, 73, 0.1);
@@ -182,19 +174,22 @@
 
 /* ===== Table Styles ===== */
 .pickup-table-container {
-  flex-grow: 1; /* Allow table to take available space */
-  /* Remove padding-top; space is now handled by header's margin-bottom */
+  flex-grow: 1;
+  width: 100%;
+  overflow-x: auto;
 }
 
 /* Table Row Styles (using divs) */
 .table-row {
   display: flex;
-  padding: 14px 0; /* Vertical padding */
-  border-bottom: 1px solid #f0f0f0; /* Lighter border */
+  padding: 14px 0;
+  border-bottom: 1px solid #f0f0f0;
   font-size: 13px;
   color: #555;
-  align-items: center; /* Vertically align content */
+  align-items: center;
+  width: 100%;
 }
+
 .table-row:last-child {
   border-bottom: none;
 }
@@ -206,45 +201,59 @@
   padding-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-bottom: 2px solid #eee; /* Thicker header border */
+  border-bottom: 2px solid #eee;
 }
 
 /* Table Cell Styles */
 .table-cell {
-  flex: 1;
-  padding: 0 10px; /* Horizontal padding */
+  padding: 0 10px;
   text-align: left;
-  white-space: nowrap; /* Prevent wrapping */
   overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis if content overflows */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
-/* Adjust flex basis for column widths */
-.table-cell:nth-child(1) { flex-basis: 25%; } /* Date */
-.table-cell:nth-child(2) { flex-basis: 20%; } /* Location */
-.table-cell:nth-child(3) { flex-basis: 15%; } /* Type */
-.table-cell:nth-child(4) { flex-basis: 20%; } /* User */
-.table-cell:nth-child(5) { flex-basis: 20%; text-align: center; } /* Status */
 
+/* Column widths - more compact */
+.table-cell:nth-child(1) { width: 12%; } /* Date */
+.table-cell:nth-child(2) { width: 12%; } /* Location */
+.table-cell:nth-child(3) { width: 12%; } /* Route */
+.table-cell:nth-child(4) { width: 8%; } /* Type */
+.table-cell:nth-child(5) { width: 8%; } /* Amount */
+.table-cell:nth-child(6) { width: 15%; } /* User */
+.table-cell:nth-child(7) { width: 10%; } /* Status */
+
+/* Remove any flex-basis properties */
+.table-cell:nth-child(1),
+.table-cell:nth-child(2),
+.table-cell:nth-child(3),
+.table-cell:nth-child(4),
+.table-cell:nth-child(5),
+.table-cell:nth-child(6),
+.table-cell:nth-child(7) {
+  flex-basis: auto;
+}
 
 /* Status Badges (reuse from AdminDashboard.css if defined globally, or redefine here) */
 .status-badge {
   display: inline-block;
   padding: 4px 10px;
-  border-radius: 12px; /* Pill shape */
+  border-radius: 12px;
   font-size: 11px;
   font-weight: 500;
   text-transform: capitalize;
 }
 
 .status-pending {
-  background-color: #ffebee; /* Light red */
+  background-color: #ffebee;
   color: #dc3545;
 }
 
 .status-completed {
-  background-color: #e8f5e9; /* Light green */
+  background-color: #e8f5e9;
   color: #198754;
 }
+
 /* Add other status styles if needed (e.g., in-progress, scheduled) */
 
 
@@ -253,26 +262,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 20px; /* Space above pagination */
-  margin-top: auto; /* Push pagination to the bottom */
-  border-top: 1px solid #f0f0f0; /* Separator */
+  padding-top: 20px;
+  margin-top: auto;
+  border-top: 1px solid #f0f0f0;
 }
 
 .pagination-info {
-  color: #777; /* Lighter text */
+  color: #777;
   font-size: 13px;
 }
 
 .pagination-controls {
   display: flex;
-  gap: 5px; /* Smaller gap between buttons */
+  gap: 5px;
 }
 
 .pagination-btn {
-  padding: 6px 12px; /* Adjust button size */
-  border: 1px solid #e0e0e0; /* Lighter border */
+  padding: 6px 12px;
+  border: 1px solid #e0e0e0;
   background-color: white;
-  border-radius: 6px; /* Slightly less rounded */
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 13px;
@@ -285,7 +294,7 @@
 }
 
 .pagination-btn.active {
-  background-color: #395849; /* Match theme color */
+  background-color: #395849;
   color: white;
   border-color: #395849;
   font-weight: 500;
@@ -297,9 +306,15 @@
   background-color: #f5f5f5;
 }
 
-.pagination-btn.prev,
-.pagination-btn.next {
-  font-weight: 500;
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 14px;
+}
+
+.error {
+  color: #dc3545;
 }
 
 /* Remove old table styles if they exist */
@@ -325,32 +340,29 @@
   margin: 20px 0;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
-  color: #666;
-  font-size: 14px;
-}
-
-.error {
-  text-align: center;
-  padding: 40px;
-  color: #dc3545;
-  font-size: 14px;
-}
-
 /* ===== Responsive Styles ===== */
+@media (max-width: 1200px) {
+  .pickup-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-wrapper {
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .pickup-content {
     margin: 15px;
     padding: 15px;
   }
 
-  .filter-panel {
-    grid-template-columns: 1fr;
-  }
-
-  .header-controls {
+  .pickup-header {
     flex-direction: column;
     align-items: stretch;
   }
@@ -361,6 +373,7 @@
 
   .table-cell {
     font-size: 12px;
+    padding: 0 8px;
   }
 
   .pagination-controls {
